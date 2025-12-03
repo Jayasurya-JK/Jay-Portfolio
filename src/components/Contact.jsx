@@ -17,9 +17,17 @@ const Contact = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
-        alert('Thanks for reaching out! I will get back to you shortly.');
+
+        const myForm = e.target;
+        const formData = new FormData(myForm);
+
+        fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData).toString(),
+        })
+            .then(() => alert("Thanks for reaching out! I will get back to you shortly."))
+            .catch((error) => alert(error));
     };
 
     return (
@@ -33,7 +41,8 @@ const Contact = () => {
                 </div>
 
                 <div className="bg-secondary p-6 md:p-8 rounded-2xl border border-white/10 shadow-xl">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form name="contact" method="POST" data-netlify="true" onSubmit={handleSubmit} className="space-y-6">
+                        <input type="hidden" name="form-name" value="contact" />
                         <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">Name</label>

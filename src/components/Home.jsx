@@ -11,9 +11,9 @@ import Footer from './Footer';
 
 const Home = () => {
     return (
-        <div className="bg-primary min-h-screen font-sans text-gray-100 selection:bg-accent selection:text-primary overflow-x-hidden">
+        <div className="bg-primary min-h-screen font-sans text-gray-100 selection:bg-accent selection:text-primary overflow-x-hidden w-full">
             <Navbar />
-            <main>
+            <main className="w-full overflow-x-hidden">
                 <HeroNew />
                 <Services />
                 <FeaturedWorkNew />

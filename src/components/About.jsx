@@ -38,14 +38,14 @@ const About = () => {
 
                     {/* Right Avatar */}
                     <Reveal delay={0.2}>
-                        <div className="flex flex-col items-center justify-center">
-                            <div className="w-48 h-48 rounded-full bg-gradient-to-br from-secondary to-primary border-4 border-accent/20 flex items-center justify-center shadow-2xl mb-6 relative overflow-hidden group">
+                        <div className="flex flex-col items-center justify-center mt-8 md:mt-0">
+                            <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full bg-gradient-to-br from-secondary to-primary border-4 border-accent/20 flex items-center justify-center shadow-2xl mb-6 relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <span className="text-6xl font-bold text-white">J</span>
+                                <span className="text-5xl sm:text-6xl font-bold text-white">J</span>
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-white">Jay</h3>
-                                <p className="text-sm text-gray-400">Freelance Web Developer & SEO</p>
+                                <h3 className="text-lg sm:text-xl font-bold text-white">Jay</h3>
+                                <p className="text-xs sm:text-sm text-gray-400">Freelance Web Developer & SEO</p>
                             </div>
                         </div>
                     </Reveal>

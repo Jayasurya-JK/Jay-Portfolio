@@ -137,7 +137,7 @@ const Contact = () => {
 
                         <button
                             type="submit"
-                            className="w-full py-4 bg-accent hover:bg-yellow-500 text-primary font-bold rounded-xl transition-all flex items-center justify-center gap-2"
+                            className="w-full py-4 min-h-[56px] bg-accent hover:bg-yellow-500 text-primary font-bold rounded-xl transition-all flex items-center justify-center gap-2 text-base"
                         >
                             Send Message <Send size={18} />
                         </button>
@@ -147,7 +147,7 @@ const Contact = () => {
                         <p className="text-gray-400 mb-4">Prefer WhatsApp? Click below to chat.</p>
                         <a
                             href="https://wa.me/your-number"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-success hover:bg-green-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-500/20"
+                            className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] bg-success hover:bg-green-600 text-white font-semibold rounded-xl transition-all shadow-lg shadow-green-500/20"
                         >
                             <MessageCircle size={20} />
                             Chat on WhatsApp

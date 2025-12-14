@@ -67,7 +67,7 @@ const ProjectShowcase = ({ project, index }) => {
         <motion.div
             ref={containerRef}
             style={{ opacity }}
-            className="min-h-screen flex items-center justify-center py-12 md:py-20 px-6 md:px-8 relative"
+            className="min-h-screen flex items-center justify-center py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -82,7 +82,7 @@ const ProjectShowcase = ({ project, index }) => {
                     className="flex-1 relative group"
                 >
                     {/* Floating Index Number */}
-                    <div className="absolute -top-10 -left-10 text-[80px] md:text-[120px] lg:text-[200px] font-black text-white/5 select-none pointer-events-none z-0">
+                    <div className="absolute -top-6 -left-4 md:-top-10 md:-left-10 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/5 select-none pointer-events-none z-0">
                         {String(index + 1).padStart(2, '0')}
                     </div>
 
@@ -130,14 +130,14 @@ const ProjectShowcase = ({ project, index }) => {
                                     initial={{ y: 20 }}
                                     animate={{ y: isHovered ? 0 : 20 }}
                                     transition={{ duration: 0.6 }}
-                                    className={`absolute ${project.desktopImage ? '-bottom-10 -right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
+                                    className={`absolute ${project.desktopImage ? '-bottom-6 -right-4 sm:-bottom-10 sm:-right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
                                 >
                                     <div className="relative">
                                         {/* Phone Frame */}
-                                        <div className="w-48 md:w-56 bg-gray-900 rounded-[2.5rem] p-2 shadow-2xl border-4 border-gray-800">
-                                            <div className="w-full bg-gray-800 rounded-[2rem] overflow-hidden relative">
+                                        <div className="w-32 sm:w-40 md:w-48 lg:w-56 bg-gray-900 rounded-[2rem] md:rounded-[2.5rem] p-1.5 md:p-2 shadow-2xl border-2 md:border-4 border-gray-800">
+                                            <div className="w-full bg-gray-800 rounded-[1.75rem] md:rounded-[2rem] overflow-hidden relative">
                                                 {/* Notch */}
-                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-gray-900 rounded-b-2xl z-10"></div>
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-4 md:h-6 bg-gray-900 rounded-b-2xl z-10"></div>
                                                 {/* Screen */}
                                                 <img
                                                     src={project.mobileImage}
@@ -147,7 +147,7 @@ const ProjectShowcase = ({ project, index }) => {
                                             </div>
                                         </div>
                                         {/* Floating Shadow */}
-                                        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-black/30 blur-xl rounded-full"></div>
+                                        <div className="absolute -bottom-4 md:-bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-6 md:h-8 bg-black/30 blur-xl rounded-full"></div>
                                     </div>
                                 </motion.div>
                             )}
@@ -170,15 +170,15 @@ const ProjectShowcase = ({ project, index }) => {
                 </motion.div>
 
                 {/* Content Section - Story Driven */}
-                <div ref={contentRef} className="flex-1 space-y-6 md:space-y-8">
+                <div ref={contentRef} className="flex-1 space-y-4 md:space-y-6 lg:space-y-8 w-full">
                     {/* Logo & Title */}
                     <div className="reveal-item">
-                        <div className="flex items-center gap-3 md:gap-4 mb-4">
-                            <div className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-2 md:p-3 flex items-center justify-center overflow-hidden">
+                        <div className="flex items-center gap-2 md:gap-3 lg:gap-4 mb-3 md:mb-4">
+                            <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-xl md:rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-2 md:p-3 flex items-center justify-center overflow-hidden flex-shrink-0">
                                 <img src={project.logo} alt={`${project.title} Logo`} className="w-full h-full object-contain" />
                             </div>
-                            <div>
-                                <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+                            <div className="min-w-0">
+                                <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight break-words">
                                     {project.title}
                                 </h3>
                                 <p className="text-accent text-xs sm:text-sm md:text-base font-semibold uppercase tracking-wider mt-1">
@@ -202,25 +202,25 @@ const ProjectShowcase = ({ project, index }) => {
                     </p>
 
                     {/* Challenge, Solution, Impact Grid */}
-                    <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                        <div className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-6 rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all">
-                            <Target className="w-8 h-8 text-red-400 mb-3" />
-                            <h4 className="text-white font-bold text-sm uppercase tracking-wide mb-2">Challenge</h4>
-                            <p className="text-gray-400 text-xs leading-relaxed">
+                    <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
+                        <div className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all">
+                            <Target className="w-6 h-6 md:w-8 md:h-8 text-red-400 mb-2 md:mb-3" />
+                            <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Challenge</h4>
+                            <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 {project.details?.challenge?.substring(0, 80) || "Complex market positioning"}...
                             </p>
                         </div>
-                        <div className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-6 rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all">
-                            <Zap className="w-8 h-8 text-blue-400 mb-3" />
-                            <h4 className="text-white font-bold text-sm uppercase tracking-wide mb-2">Solution</h4>
-                            <p className="text-gray-400 text-xs leading-relaxed">
+                        <div className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all">
+                            <Zap className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mb-2 md:mb-3" />
+                            <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Solution</h4>
+                            <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 {project.details?.solution?.substring(0, 80) || "Custom interactive features"}...
                             </p>
                         </div>
-                        <div className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-6 rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all">
-                            <TrendingUp className="w-8 h-8 text-green-400 mb-3" />
-                            <h4 className="text-white font-bold text-sm uppercase tracking-wide mb-2">Impact</h4>
-                            <p className="text-gray-400 text-xs leading-relaxed">
+                        <div className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all sm:col-span-2 md:col-span-1">
+                            <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-green-400 mb-2 md:mb-3" />
+                            <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Impact</h4>
+                            <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 Enhanced user engagement and conversions
                             </p>
                         </div>
@@ -297,18 +297,18 @@ const FeaturedWorkNew = () => {
             </div>
 
             {/* Section Header */}
-            <div className="section-title max-w-7xl mx-auto px-4 md:px-8 mb-20 relative z-10">
+            <div className="section-title max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-12 md:mb-20 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="text-center space-y-4"
+                    className="text-center space-y-3 md:space-y-4"
                 >
-                    <h2 className="text-5xl md:text-7xl font-black text-white">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white">
                         Selected <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-400">Works</span>
                     </h2>
-                    <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto">
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-2xl mx-auto px-4">
                         Real projects. Real impact. Real results.
                     </p>
                 </motion.div>

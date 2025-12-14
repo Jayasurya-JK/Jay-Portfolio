@@ -11,19 +11,20 @@ const FloatingElement = ({ children, delay = 0, duration = 3 }) => {
     const reduceMotion = shouldReduceMotion();
     const isMobile = useMemo(() => isMobileDevice(), []);
     
-    if (reduceMotion || isMobile) {
+    if (reduceMotion) {
         return <div className="inline-block">{children}</div>;
     }
 
+    // Lighter animation for mobile, full animation for desktop
     return (
         <motion.div
             className="inline-block"
             animate={{
-                y: [0, -20, 0],
-                rotate: [0, 5, -5, 0],
+                y: isMobile ? [0, -10, 0] : [0, -20, 0],
+                rotate: isMobile ? [0, 2, -2, 0] : [0, 5, -5, 0],
             }}
             transition={{
-                duration,
+                duration: isMobile ? duration * 0.7 : duration,
                 delay,
                 repeat: Infinity,
                 ease: "easeInOut"
@@ -127,26 +128,37 @@ const HeroNew = () => {
             },
             fpsLimit: isMobile ? 30 : 120,
             interactivity: {
+                detect_on: "canvas",
                 events: {
-                    onClick: {
-                        enable: !isMobile,
-                        mode: "push",
-                    },
                     onHover: {
                         enable: !isMobile,
                         mode: "grab",
                     },
+                    onClick: {
+                        enable: true,
+                        mode: "push",
+                    },
+                    onTouch: {
+                        enable: isMobile,
+                        mode: ["grab", "bubble"],
+                    },
+                    resize: true,
                 },
                 modes: {
-                    push: {
-                        quantity: 4,
-                    },
                     grab: {
-                        distance: 200,
+                        distance: isMobile ? 120 : 150,
                         links: {
                             opacity: 0.8
                         }
                     },
+                    push: {
+                        quantity: isMobile ? 2 : 4,
+                    },
+                    bubble: {
+                        distance: 200,
+                        size: 6,
+                        duration: 2,
+                    }
                 },
             },
             particles: {
@@ -167,7 +179,7 @@ const HeroNew = () => {
                         default: "bounce",
                     },
                     random: true,
-                    speed: isMobile ? 0.5 : 1,
+                    speed: isMobile ? 0.8 : 1,
                     straight: false,
                 },
                 number: {
@@ -175,7 +187,7 @@ const HeroNew = () => {
                         enable: true,
                         area: 800,
                     },
-                    value: isMobile ? 20 : 60,
+                    value: isMobile ? 40 : 60,
                 },
                 opacity: {
                     value: 0.5,
@@ -285,7 +297,7 @@ const HeroNew = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
-                        className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-2 w-full max-w-full overflow-hidden"
+                        className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-2 w-full max-w-full overflow-visible relative z-20"
                     >
                         {[
                             { icon: Code2, text: 'Modern Development', color: 'from-blue-500/20 to-blue-500/5 border-blue-500/30' },
@@ -293,7 +305,7 @@ const HeroNew = () => {
                             { icon: TrendingUp, text: 'SEO Optimized', color: 'from-green-500/20 to-green-500/5 border-green-500/30' },
                         ].map((item, index) => (
                             <FloatingElement key={index} delay={index * 0.2} duration={3 + index}>
-                                <div className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-gradient-to-r ${item.color} border rounded-full backdrop-blur-sm whitespace-nowrap`}>
+                                <div className={`relative z-10 flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-gradient-to-r ${item.color} border rounded-full backdrop-blur-sm whitespace-nowrap`}>
                                     <item.icon className="w-3 h-3 md:w-4 md:h-4 text-white flex-shrink-0" />
                                     <span className="text-white text-xs md:text-sm font-medium">{item.text}</span>
                                 </div>

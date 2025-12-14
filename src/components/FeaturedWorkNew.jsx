@@ -13,6 +13,7 @@ const ProjectShowcase = ({ project, index }) => {
     const imageRef = useRef(null);
     const contentRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
+    const [isInView, setIsInView] = useState(false);
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -56,6 +57,17 @@ const ProjectShowcase = ({ project, index }) => {
                 stagger: 0.15,
                 ease: "power3.out"
             });
+
+            // Track when element is in view for mobile animations
+            ScrollTrigger.create({
+                trigger: containerRef.current,
+                start: "top 60%",
+                end: "bottom 40%",
+                onEnter: () => setIsInView(true),
+                onLeave: () => setIsInView(false),
+                onEnterBack: () => setIsInView(true),
+                onLeaveBack: () => setIsInView(false),
+            });
         }, containerRef);
 
         return () => ctx.revert();
@@ -88,16 +100,36 @@ const ProjectShowcase = ({ project, index }) => {
 
                     {/* Main Visual Container */}
                     <div className="relative">
-                        {/* Glow Effect */}
-                        <div className={`absolute -inset-4 bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-700 rounded-3xl`}></div>
+                        {/* Glow Effect - Auto-animate on mobile when in view */}
+                        <motion.div 
+                            className={`absolute -inset-4 bg-gradient-to-r ${project.color} blur-2xl rounded-3xl`}
+                            animate={{
+                                opacity: isInView || isHovered ? [0.2, 0.4, 0.2] : 0
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }}
+                        ></motion.div>
 
                         {/* Device Mockup Container */}
                         <div className="relative" ref={imageRef}>
                             {project.desktopImage && (
                                 <motion.div
                                     initial={{ rotateY: -15, rotateX: 5 }}
+                                    animate={{
+                                        // Auto-animate on mobile when in view
+                                        rotateY: isInView ? [0, 5, 0, -5, 0] : -15,
+                                        rotateX: isInView ? [0, 2, 0] : 5,
+                                        scale: isInView ? [1, 1.02, 1] : 1
+                                    }}
                                     whileHover={{ rotateY: 0, rotateX: 0, scale: 1.02 }}
-                                    transition={{ duration: 0.6, ease: "easeOut" }}
+                                    transition={{ 
+                                        duration: 4,
+                                        repeat: isInView ? Infinity : 0,
+                                        ease: "easeInOut"
+                                    }}
                                     className="relative perspective-1000"
                                 >
                                     {/* Desktop Browser Chrome */}
@@ -124,12 +156,18 @@ const ProjectShowcase = ({ project, index }) => {
                                 </motion.div>
                             )}
 
-                            {/* Mobile Mockup - Floating */}
+                            {/* Mobile Mockup - Floating with auto-animation */}
                             {project.mobileImage && (
                                 <motion.div
-                                    initial={{ y: 20 }}
-                                    animate={{ y: isHovered ? 0 : 20 }}
-                                    transition={{ duration: 0.6 }}
+                                    animate={{ 
+                                        y: isInView || isHovered ? [20, 0, 20] : 20,
+                                        rotate: isInView ? [0, 2, 0, -2, 0] : 0
+                                    }}
+                                    transition={{ 
+                                        duration: 4,
+                                        repeat: isInView ? Infinity : 0,
+                                        ease: "easeInOut"
+                                    }}
                                     className={`absolute ${project.desktopImage ? '-bottom-6 -right-4 sm:-bottom-10 sm:-right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
                                 >
                                     <div className="relative">
@@ -153,16 +191,23 @@ const ProjectShowcase = ({ project, index }) => {
                             )}
                         </div>
 
-                        {/* Decorative Elements */}
+                        {/* Decorative Elements - Auto-animate */}
                         <motion.div
                             animate={{
                                 rotate: [0, 360],
-                                scale: [1, 1.2, 1]
+                                scale: isInView ? [1, 1.3, 1] : [1, 1.2, 1]
                             }}
                             transition={{
-                                duration: 20,
-                                repeat: Infinity,
-                                ease: "linear"
+                                rotate: {
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                },
+                                scale: {
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }
                             }}
                             className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl"
                         ></motion.div>

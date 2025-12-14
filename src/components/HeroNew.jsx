@@ -144,13 +144,13 @@ const HeroNew = () => {
                 },
                 modes: {
                     grab: {
-                        distance: isMobile ? 100 : 120,
+                        distance: isMobile ? 120 : 150,
                         links: {
                             opacity: 0.8
                         }
                     },
                     push: {
-                        quantity: 2,
+                        quantity: isMobile ? 2 : 4,
                     },
                     bubble: {
                         distance: 200,
@@ -165,10 +165,10 @@ const HeroNew = () => {
                 },
                 links: {
                     color: "#00FF87",
-                    distance: 120,
+                    distance: 150,
                     enable: true,
-                    opacity: 0.6,
-                    width: 1.5,
+                    opacity: 0.3,
+                    width: 1,
                 },
                 move: {
                     direction: "none",
@@ -185,14 +185,14 @@ const HeroNew = () => {
                         enable: true,
                         area: 800,
                     },
-                    value: isMobile ? 30 : 45,
+                    value: isMobile ? 40 : 60,
                 },
                 opacity: {
-                    value: 0.8,
+                    value: 0.5,
                     animation: {
                         enable: true,
                         speed: 1,
-                        minimumValue: 0.4,
+                        minimumValue: 0.1,
                     }
                 },
                 shape: {
@@ -200,12 +200,6 @@ const HeroNew = () => {
                 },
                 size: {
                     value: { min: 1, max: 3 },
-                },
-                life: {
-                    duration: {
-                        value: 1.5
-                    },
-                    count: 1
                 },
             },
             detectRetina: true,
@@ -233,7 +227,7 @@ const HeroNew = () => {
                     <Particles
                         id="hero-particles"
                         options={particlesOptions}
-                        className="w-full h-full opacity-80 md:opacity-100"
+                        className="w-full h-full opacity-50 md:opacity-100"
                     />
                 </div>
             )}

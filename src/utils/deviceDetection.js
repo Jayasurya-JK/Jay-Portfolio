@@ -33,7 +33,8 @@ export const getDeviceType = () => {
 
 export const shouldReduceMotion = () => {
     if (typeof window === 'undefined') return false;
-    // Check user preference for reduced motion
+    // Only check user preference for reduced motion
+    // Components should use isMobileDevice() separately to adjust animation parameters
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return prefersReducedMotion || isMobileDevice() || isLowEndDevice();
+    return prefersReducedMotion;
 };

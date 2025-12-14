@@ -91,13 +91,13 @@ const Process = () => {
                 {/* Header */}
                 <Reveal>
                     <div className="text-center mb-8 md:mb-12">
-                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">How we work together</h2>
-                        <p className="text-gray-400">Our proven process for delivering results.</p>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4">How we work together</h2>
+                        <p className="text-sm sm:text-base text-gray-400">Our proven process for delivering results.</p>
                     </div>
                 </Reveal>
 
                 {/* Active Content Display */}
-                <div className="relative h-[260px] md:h-[200px] max-w-2xl mx-auto text-center mb-12">
+                <div className="relative h-[280px] sm:h-[260px] md:h-[200px] max-w-2xl mx-auto text-center mb-8 md:mb-12 px-2">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeIndex}
@@ -107,11 +107,11 @@ const Process = () => {
                             transition={{ duration: 0.4 }}
                             className="absolute inset-0 flex flex-col items-center"
                         >
-                            <div className="text-accent font-mono text-xl mb-2">Step {currentStep.number}</div>
-                            <h3 className="text-2xl md:text-4xl font-bold text-white mb-4">
+                            <div className="text-accent font-mono text-base sm:text-lg md:text-xl mb-2">Step {currentStep.number}</div>
+                            <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4 px-4">
                                 {currentStep.title}
                             </h3>
-                            <p className="text-gray-400 text-lg leading-relaxed px-4 md:px-0">
+                            <p className="text-gray-400 text-sm sm:text-base md:text-lg leading-relaxed px-4 md:px-0">
                                 {currentStep.description}
                             </p>
                         </motion.div>
@@ -120,17 +120,17 @@ const Process = () => {
 
                 {/* Rotating Wheel Container */}
                 <motion.div
-                    className="relative w-full h-[220px] md:h-[360px] flex justify-center mt-12 md:mt-16 overflow-visible touch-pan-y"
+                    className="relative w-full h-[200px] sm:h-[220px] md:h-[360px] flex justify-center mt-8 sm:mt-12 md:mt-16 overflow-visible touch-pan-y"
                     onMouseEnter={() => setIsAutoPlaying(false)}
                     onMouseLeave={() => setIsAutoPlaying(true)}
                     onPanEnd={handlePanEnd}
                 >
                     {/* Static Semi-Circle Track (The "Hill") */}
-                    <div className="absolute top-10 w-[320px] h-[160px] md:w-[600px] md:h-[300px] rounded-t-full border-t-2 border-l-2 border-r-2 border-b-0 border-dashed border-white/10 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
+                    <div className="absolute top-10 w-[280px] h-[140px] sm:w-[320px] sm:h-[160px] md:w-[600px] md:h-[300px] rounded-t-full border-t-2 border-l-2 border-r-2 border-b-0 border-dashed border-white/10 bg-gradient-to-b from-white/5 to-transparent pointer-events-none"></div>
 
                     {/* Icons Container */}
                     <motion.div
-                        className="absolute top-10 w-[320px] h-[320px] md:w-[600px] md:h-[600px] rounded-full flex items-center justify-center pointer-events-none"
+                        className="absolute top-10 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[600px] md:h-[600px] rounded-full flex items-center justify-center pointer-events-none"
                         animate={{ rotate: -90 - (activeIndex * spacing) }}
                         transition={{ type: "spring", stiffness: 50, damping: 20 }}
                     >
@@ -165,8 +165,8 @@ const Process = () => {
                                         {/* Counter-rotate icon to keep it upright relative to screen */}
                                         <motion.div
                                             className={`rounded-full flex items-center justify-center border-4 transition-all duration-300 relative ${isActive
-                                                ? `w-20 h-20 md:w-24 md:h-24 ${step.color} shadow-[0_0_30px_rgba(0,0,0,0.5)] scale-125 z-30`
-                                                : 'w-12 h-12 md:w-16 md:h-16 border-white/10 text-gray-500 hover:border-white/30 grayscale bg-gray-900 z-10'
+                                                ? `w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 ${step.color} shadow-[0_0_30px_rgba(0,0,0,0.5)] scale-110 sm:scale-125 z-30`
+                                                : 'w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 border-white/10 text-gray-500 hover:border-white/30 grayscale bg-gray-900 z-10'
                                                 }`}
                                             // We need to counter-rotate by the TOTAL rotation (container + item)
                                             // Container is at: -90 - (activeIndex * spacing)
@@ -177,7 +177,7 @@ const Process = () => {
                                             animate={{ rotate: -(-90 + (effectiveIndex - activeIndex) * spacing) }}
                                             transition={{ type: "spring", stiffness: 50, damping: 20 }}
                                         >
-                                            {React.cloneElement(step.icon, { size: isActive ? 24 : 20 })}
+                                            {React.cloneElement(step.icon, { size: isActive ? 24 : 20, className: 'sm:w-5 sm:h-5 md:w-6 md:h-6' })}
                                         </motion.div>
                                     </div>
                                 </div>
@@ -189,7 +189,12 @@ const Process = () => {
                 {/* CSS Variables for Radius */}
                 <style>{`
                     :root {
-                        --wheel-radius: 160px;
+                        --wheel-radius: 140px;
+                    }
+                    @media (min-width: 640px) {
+                        :root {
+                            --wheel-radius: 160px;
+                        }
                     }
                     @media (min-width: 768px) {
                         :root {

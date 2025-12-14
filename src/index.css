@@ -7,10 +7,21 @@
 @layer base {
   html {
     /* scroll-behavior: smooth; - Disabled for Lenis */
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-primary text-text antialiased font-sans;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+  }
+
+  /* Ensure all root elements respect viewport width on mobile */
+  #root {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
   }
 }
 

@@ -2,8 +2,11 @@ import React from 'react';
 import { Globe, Image, Server, Check, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Reveal from './Reveal';
+import { shouldReduceMotion } from '../utils/deviceDetection';
 
 const Services = () => {
+    const reduceMotion = shouldReduceMotion();
+    
     const services = [
         {
             icon: <Globe size={32} className="text-accent" />,
@@ -63,10 +66,10 @@ const Services = () => {
                     {services.map((service, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, y: 50 }}
+                            initial={{ opacity: 0, y: reduceMotion ? 30 : 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+                            transition={{ duration: reduceMotion ? 0.4 : 0.6, delay: index * 0.1, ease: "easeOut" }}
                             className="min-w-[85vw] md:min-w-0 snap-center bg-secondary border border-white/5 rounded-2xl p-6 md:p-8 hover:border-accent/30 transition-all hover:-translate-y-1 duration-300 flex flex-col h-full"
                         >
                             <div className="bg-primary/50 w-14 h-14 rounded-xl flex items-center justify-center mb-6 border border-white/5">

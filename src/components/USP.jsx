@@ -2,8 +2,11 @@ import React from 'react';
 import { Wallet, Search, Target, LifeBuoy, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Reveal from './Reveal';
+import { shouldReduceMotion } from '../utils/deviceDetection';
 
 const USP = () => {
+    const reduceMotion = shouldReduceMotion();
+    
     const usps = [
         {
             icon: <Wallet size={24} className="text-accent" />,
@@ -47,10 +50,10 @@ const USP = () => {
                     {usps.map((usp, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, y: 50 }}
+                            initial={{ opacity: 0, y: reduceMotion ? 30 : 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+                            transition={{ duration: reduceMotion ? 0.3 : 0.5, delay: index * 0.1, ease: "easeOut" }}
                             className="min-w-[70vw] md:min-w-0 snap-center bg-secondary/50 p-6 rounded-xl border border-white/5 hover:bg-secondary transition-colors"
                         >
                             <div className="mb-4 bg-primary w-10 h-10 rounded-lg flex items-center justify-center border border-white/5">

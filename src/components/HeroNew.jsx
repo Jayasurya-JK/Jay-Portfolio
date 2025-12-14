@@ -108,16 +108,14 @@ const HeroNew = () => {
         return () => window.removeEventListener('mousemove', moveCursor);
     }, [isMobile, isTouch]);
 
-    // Particles initialization - Desktop only for better performance
+    // Particles initialization
     useEffect(() => {
-        if (isMobile) return;
-
         initParticlesEngine(async (engine) => {
             await loadSlim(engine);
         }).then(() => {
             setInit(true);
         });
-    }, [isMobile]);
+    }, []);
 
     const particlesOptions = useMemo(
         () => ({

@@ -146,7 +146,7 @@ const HeroNew = () => {
                     grab: {
                         distance: isMobile ? 100 : 120,
                         links: {
-                            opacity: 0.8
+                            opacity: 0.3
                         }
                     },
                     push: {
@@ -167,8 +167,8 @@ const HeroNew = () => {
                     color: "#00FF87",
                     distance: 120,
                     enable: true,
-                    opacity: 0.6,
-                    width: 1.5,
+                    opacity: 0.25,
+                    width: 1,
                 },
                 move: {
                     direction: "none",
@@ -188,11 +188,11 @@ const HeroNew = () => {
                     value: isMobile ? 30 : 45,
                 },
                 opacity: {
-                    value: 0.8,
+                    value: 0.5,
                     animation: {
                         enable: true,
                         speed: 1,
-                        minimumValue: 0.4,
+                        minimumValue: 0.1,
                     }
                 },
                 shape: {
@@ -233,7 +233,7 @@ const HeroNew = () => {
                     <Particles
                         id="hero-particles"
                         options={particlesOptions}
-                        className="w-full h-full opacity-80 md:opacity-100"
+                        className="w-full h-full opacity-50 md:opacity-100"
                     />
                 </div>
             )}

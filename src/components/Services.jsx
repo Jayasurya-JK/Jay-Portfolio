@@ -59,12 +59,11 @@ const Services = () => {
         }
     ];
 
-    // Update active card based on scroll position with smoother transitions
+    // Update active card based on scroll position
     useEffect(() => {
         const totalCards = services.length;
         const unsubscribe = scrollYProgress.on('change', (latest) => {
-            // More granular control - each card gets equal scroll space
-            const cardIndex = Math.min(Math.floor(latest * (totalCards + 0.5) * 1.2), totalCards - 1);
+            const cardIndex = Math.min(Math.floor(latest * totalCards * 1.5), totalCards - 1);
             setActiveCard(Math.max(0, cardIndex));
         });
 
@@ -76,7 +75,7 @@ const Services = () => {
             id="services" 
             ref={containerRef}
             className="relative py-20 md:py-32 bg-gradient-to-b from-secondary/30 via-primary to-secondary/50 overflow-hidden"
-            style={{ minHeight: isMobile ? 'auto' : '400vh' }}
+            style={{ minHeight: isMobile ? 'auto' : '300vh' }}
         >
             {/* Section Header */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
@@ -88,7 +87,7 @@ const Services = () => {
                     className="text-center"
                 >
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                        What Will I Do For You
+                        What I can do for you
                     </h2>
                     <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
                         Simple, focused services that give your business a real online presence.
@@ -96,14 +95,11 @@ const Services = () => {
                 </motion.div>
             </div>
 
-            {/* Apple-Style Stacked Cards Container */}
-            <div className={`${isMobile ? 'relative' : 'sticky top-20'} max-w-6xl mx-auto px-4 sm:px-6 lg:px-8`}>
-                <div 
-                    className="relative min-h-[600px]" 
-                    style={{ perspective: isMobile ? 'none' : '2500px' }}
-                >
+            {/* Stacked Cards Container */}
+            <div className={`${isMobile ? 'relative' : 'sticky top-20'} max-w-5xl mx-auto px-4 sm:px-6 lg:px-8`}>
+                <div className="relative" style={{ perspective: isMobile ? 'none' : '2000px' }}>
                     {services.map((service, index) => (
-                        <AppleStackedCard
+                        <StackedCard
                             key={index}
                             service={service}
                             index={index}
@@ -115,13 +111,13 @@ const Services = () => {
                     ))}
                 </div>
 
-                {/* Progress Indicator - Desktop */}
+                {/* Progress Indicator */}
                 {!isMobile && (
                     <div className="flex justify-center gap-3 mt-8">
                         {services.map((_, index) => (
                             <motion.div
                                 key={index}
-                                className={`h-2 rounded-full transition-all duration-500 ${
+                                className={`h-2 rounded-full transition-all duration-300 ${
                                     index === activeCard 
                                         ? 'w-12 bg-accent' 
                                         : 'w-2 bg-white/30'
@@ -166,142 +162,106 @@ const Services = () => {
     );
 };
 
-const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, reduceMotion }) => {
+const StackedCard = ({ service, index, activeCard, totalCards, isMobile, reduceMotion }) => {
     const Icon = service.icon;
     const isActive = index === activeCard;
     const isPast = index < activeCard;
 
-    // Apple-style 3D transform calculations
+    // Calculate transform values based on card position
     const getTransform = () => {
         if (isMobile) {
-            // Mobile: Simple vertical stack
+            // Mobile: Simple stack without scroll animation
             return {
                 scale: 1,
                 y: 0,
                 rotateX: 0,
-                rotateY: 0,
-                z: 0,
                 opacity: 1,
                 zIndex: index,
             };
         }
 
         if (isPast) {
-            // Cards that have been scrolled past - fly up and away
+            // Cards that have been scrolled past
             return {
-                scale: 0.9,
-                y: -150,
-                rotateX: -15,
-                rotateY: 5,
-                z: -200,
+                scale: 1.05,
+                y: -100,
+                rotateX: 10,
                 opacity: 0,
                 zIndex: index,
             };
         }
 
         if (isActive) {
-            // Active card - center stage, full visibility
+            // Active card in front
             return {
                 scale: 1,
                 y: 0,
                 rotateX: 0,
-                rotateY: 0,
-                z: 0,
                 opacity: 1,
-                zIndex: totalCards + 10,
+                zIndex: totalCards + index,
             };
         }
 
-        // Future cards - stacked behind with 3D depth
+        // Future cards stacked behind
         const offset = index - activeCard;
-        const stackSpacing = 30;
-        const scaleDecrement = 0.05;
-        const rotationY = 3; // Slight angle for depth
-        
         return {
-            scale: Math.max(0.8, 1 - (offset * scaleDecrement)),
-            y: offset * stackSpacing,
-            rotateX: offset * 2,
-            rotateY: -rotationY * offset,
-            z: -100 * offset,
-            opacity: Math.max(0.3, 1 - (offset * 0.15)),
+            scale: 1 - (offset * 0.05),
+            y: offset * (isMobile ? 20 : 40),
+            rotateX: 0,
+            opacity: 1 - (offset * 0.2),
             zIndex: totalCards - offset,
         };
     };
 
     const transform = getTransform();
+    const springConfig = { stiffness: 300, damping: 30 };
 
     return (
         <motion.div
             className={`${isMobile ? 'mb-6' : 'absolute inset-0'} will-change-transform`}
             initial={false}
-            animate={reduceMotion ? { 
-                ...transform, 
-                scale: 1, 
-                rotateX: 0, 
-                rotateY: 0,
-                z: 0 
-            } : {
-                scale: transform.scale,
-                y: transform.y,
-                rotateX: transform.rotateX,
-                rotateY: transform.rotateY,
-                z: transform.z,
-                opacity: transform.opacity,
+            animate={reduceMotion ? { ...transform, scale: 1, rotateX: 0 } : transform}
+            transition={{
+                type: "spring",
+                ...springConfig,
             }}
             style={{
                 transformStyle: 'preserve-3d',
-                zIndex: transform.zIndex,
-            }}
-            transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 35,
-                mass: 0.8,
             }}
         >
             <div 
-                className="relative backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 overflow-hidden"
+                className="relative backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl overflow-hidden"
                 style={{
-                    background: `linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(26, 26, 46, 0.85) 100%)`,
-                    boxShadow: isActive 
-                        ? '0 30px 90px -20px rgba(0, 0, 0, 0.6), 0 0 80px -10px rgba(0, 255, 135, 0.1)' 
-                        : '0 10px 40px -10px rgba(0, 0, 0, 0.4)',
+                    background: `linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(26, 26, 46, 0.7) 100%)`,
                 }}
             >
-                {/* Enhanced glassmorphism overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/8 to-transparent pointer-events-none" />
+                {/* Glassmorphism overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                 
-                {/* Animated border glow - stronger on active card */}
-                <div 
-                    className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${service.gradient} blur-xl transition-opacity duration-500`}
-                    style={{ opacity: isActive ? 0.4 : 0.2 }}
-                />
+                {/* Animated border glow */}
+                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${service.gradient} opacity-20 blur-xl`} />
 
                 {/* Content */}
                 <div className="relative z-10">
-                    {/* Icon with enhanced 3D effect */}
+                    {/* Icon with orbital ring */}
                     <div className="relative w-20 h-20 md:w-24 md:h-24 mb-6 md:mb-8">
                         <motion.div
                             className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/30 to-accent/10 border border-accent/30 backdrop-blur-sm"
-                            animate={reduceMotion || !isActive ? {} : {
+                            animate={reduceMotion ? {} : {
                                 rotate: [0, 360],
                             }}
-                            transition={!isActive ? undefined : {
+                            transition={{
                                 duration: 20,
                                 repeat: Infinity,
                                 ease: "linear"
                             }}
-                            style={{
-                                boxShadow: isActive ? '0 10px 40px -10px rgba(0, 255, 135, 0.3)' : 'none',
-                            }}
                         />
                         <motion.div
                             className="absolute inset-2 rounded-xl bg-gradient-to-br from-accent/40 to-accent/10 flex items-center justify-center"
-                            animate={reduceMotion || !isActive ? {} : {
+                            animate={reduceMotion ? {} : {
                                 scale: [1, 1.05, 1],
                             }}
-                            transition={!isActive ? undefined : {
+                            transition={{
                                 duration: 2,
                                 repeat: Infinity,
                                 ease: "easeInOut"
@@ -327,14 +287,9 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
                             <motion.li
                                 key={idx}
                                 initial={{ opacity: 0, x: -20 }}
-                                animate={{ 
-                                    opacity: isActive ? 1 : 0.7, 
-                                    x: 0 
-                                }}
-                                transition={{ 
-                                    delay: isActive ? idx * 0.1 : 0,
-                                    duration: 0.3,
-                                }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
                                 className="flex items-start gap-3"
                             >
                                 <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-success/20 flex items-center justify-center">
@@ -346,11 +301,8 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
                     </ul>
                 </div>
 
-                {/* Decorative corner gradient - enhanced on active */}
-                <div 
-                    className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-accent/10 to-transparent rounded-full blur-3xl pointer-events-none transition-opacity duration-500"
-                    style={{ opacity: isActive ? 0.3 : 0.15 }}
-                />
+                {/* Decorative corner gradient */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-accent/10 to-transparent rounded-full blur-3xl pointer-events-none" />
             </div>
         </motion.div>
     );

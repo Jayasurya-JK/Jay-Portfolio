@@ -144,13 +144,13 @@ const HeroNew = () => {
                 },
                 modes: {
                     grab: {
-                        distance: isMobile ? 120 : 150,
+                        distance: isMobile ? 100 : 120,
                         links: {
-                            opacity: 0.8
+                            opacity: 0.3
                         }
                     },
                     push: {
-                        quantity: isMobile ? 2 : 4,
+                        quantity: 2,
                     },
                     bubble: {
                         distance: 200,
@@ -165,9 +165,9 @@ const HeroNew = () => {
                 },
                 links: {
                     color: "#00FF87",
-                    distance: 150,
+                    distance: 120,
                     enable: true,
-                    opacity: 0.3,
+                    opacity: 0.25,
                     width: 1,
                 },
                 move: {
@@ -185,7 +185,7 @@ const HeroNew = () => {
                         enable: true,
                         area: 800,
                     },
-                    value: isMobile ? 40 : 60,
+                    value: isMobile ? 30 : 45,
                 },
                 opacity: {
                     value: 0.5,
@@ -200,6 +200,12 @@ const HeroNew = () => {
                 },
                 size: {
                     value: { min: 1, max: 3 },
+                },
+                life: {
+                    duration: {
+                        value: 1.5
+                    },
+                    count: 1
                 },
             },
             detectRetina: true,

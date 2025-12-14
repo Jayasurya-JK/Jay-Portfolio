@@ -39,16 +39,18 @@ const Hero = () => {
                     },
                     onHover: {
                         enable: true,
-                        mode: "repulse",
+                        mode: "grab",
                     },
                 },
                 modes: {
                     push: {
-                        quantity: 4,
+                        quantity: 2,
                     },
-                    repulse: {
-                        distance: 100,
-                        duration: 0.4,
+                    grab: {
+                        distance: 120,
+                        links: {
+                            opacity: 0.3
+                        }
                     },
                 },
             },
@@ -58,9 +60,9 @@ const Hero = () => {
                 },
                 links: {
                     color: "#ffffff",
-                    distance: 130, // Reduced distance for less calculations
+                    distance: 120, // Reduced distance for less messy connections
                     enable: true,
-                    opacity: 0.5,
+                    opacity: 0.25,
                     width: 1,
                 },
                 move: {
@@ -78,7 +80,7 @@ const Hero = () => {
                         enable: true,
                         area: 800,
                     },
-                    value: 40, // Reduced count (Optimization)
+                    value: 30, // Reduced count for mobile optimization
                 },
                 opacity: {
                     value: 0.6,
@@ -88,6 +90,12 @@ const Hero = () => {
                 },
                 size: {
                     value: { min: 2, max: 4 },
+                },
+                life: {
+                    duration: {
+                        value: 1.5
+                    },
+                    count: 1
                 },
             },
             detectRetina: true,

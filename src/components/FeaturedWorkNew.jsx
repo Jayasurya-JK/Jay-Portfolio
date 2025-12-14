@@ -22,10 +22,10 @@ const ProjectShowcase = ({ project, index }) => {
         offset: ["start end", "end start"]
     });
 
-    // Disable heavy scroll animations on mobile
-    const y = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [100, -100]);
+    // Disable heavy scroll animations when motion should be reduced
+    const y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [100, -100]);
     const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [1, 1, 1] : [0.8, 1, 0.8]);
+    const scale = useTransform(scrollYProgress, [0, 0.5, 1], reduceMotion ? [1, 1, 1] : [0.8, 1, 0.8]);
 
     const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
     const smoothScale = useSpring(scale, { stiffness: 100, damping: 30 });
@@ -87,7 +87,7 @@ const ProjectShowcase = ({ project, index }) => {
 
                 {/* Visual Section with 3D Depth */}
                 <motion.div
-                    style={isMobile ? {} : { y: smoothY, scale: smoothScale }}
+                    style={reduceMotion ? {} : { y: smoothY, scale: smoothScale }}
                     className="flex-1 relative group"
                 >
                     {/* Floating Index Number */}

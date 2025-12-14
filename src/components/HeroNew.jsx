@@ -1,12 +1,19 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { ArrowRight, Sparkles, Code2, Palette, TrendingUp } from 'lucide-react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import Typewriter from 'typewriter-effect';
 import gsap from 'gsap';
+import { isMobileDevice, isTouchDevice, shouldReduceMotion } from '../utils/deviceDetection';
 
 const FloatingElement = ({ children, delay = 0, duration = 3 }) => {
+    const reduceMotion = shouldReduceMotion();
+    
+    if (reduceMotion) {
+        return <div>{children}</div>;
+    }
+
     return (
         <motion.div
             animate={{
@@ -29,13 +36,15 @@ const MagneticButton = ({ children, href, className }) => {
     const ref = useRef(null);
     const x = useMotionValue(0);
     const y = useMotionValue(0);
+    const isTouch = isTouchDevice();
 
     const springConfig = { damping: 15, stiffness: 150 };
     const springX = useSpring(x, springConfig);
     const springY = useSpring(y, springConfig);
 
     const handleMouseMove = (e) => {
-        if (!ref.current) return;
+        // Disable magnetic effect on touch devices
+        if (isTouch || !ref.current) return;
         const rect = ref.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -48,6 +57,7 @@ const MagneticButton = ({ children, href, className }) => {
     };
 
     const handleMouseLeave = () => {
+        if (isTouch) return;
         x.set(0);
         y.set(0);
     };
@@ -57,10 +67,10 @@ const MagneticButton = ({ children, href, className }) => {
             ref={ref}
             href={href}
             className={className}
-            style={{ x: springX, y: springY }}
+            style={isTouch ? {} : { x: springX, y: springY }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            whileHover={{ scale: 1.05 }}
+            whileHover={isTouch ? {} : { scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
         >
             {children}
@@ -72,9 +82,13 @@ const HeroNew = () => {
     const [init, setInit] = useState(false);
     const heroRef = useRef(null);
     const cursorRef = useRef(null);
+    const isMobile = isMobileDevice();
+    const isTouch = isTouchDevice();
 
-    // Custom cursor effect
+    // Custom cursor effect - Desktop only
     useEffect(() => {
+        if (isMobile || isTouch) return;
+
         const moveCursor = (e) => {
             if (cursorRef.current) {
                 gsap.to(cursorRef.current, {
@@ -88,16 +102,18 @@ const HeroNew = () => {
 
         window.addEventListener('mousemove', moveCursor);
         return () => window.removeEventListener('mousemove', moveCursor);
-    }, []);
+    }, [isMobile, isTouch]);
 
-    // Particles initialization
+    // Particles initialization - Desktop only for better performance
     useEffect(() => {
+        if (isMobile) return;
+
         initParticlesEngine(async (engine) => {
             await loadSlim(engine);
         }).then(() => {
             setInit(true);
         });
-    }, []);
+    }, [isMobile]);
 
     const particlesOptions = useMemo(
         () => ({
@@ -106,15 +122,15 @@ const HeroNew = () => {
                     value: "transparent",
                 },
             },
-            fpsLimit: 120,
+            fpsLimit: isMobile ? 30 : 120,
             interactivity: {
                 events: {
                     onClick: {
-                        enable: true,
+                        enable: !isMobile,
                         mode: "push",
                     },
                     onHover: {
-                        enable: true,
+                        enable: !isMobile,
                         mode: "grab",
                     },
                 },
@@ -148,7 +164,7 @@ const HeroNew = () => {
                         default: "bounce",
                     },
                     random: true,
-                    speed: 1,
+                    speed: isMobile ? 0.5 : 1,
                     straight: false,
                 },
                 number: {
@@ -156,7 +172,7 @@ const HeroNew = () => {
                         enable: true,
                         area: 800,
                     },
-                    value: 60,
+                    value: isMobile ? 20 : 60,
                 },
                 opacity: {
                     value: 0.5,
@@ -176,7 +192,7 @@ const HeroNew = () => {
             detectRetina: true,
             fullScreen: { enable: false },
         }),
-        [],
+        [isMobile],
     );
 
     return (

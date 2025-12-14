@@ -5,6 +5,7 @@ import { ArrowRight, ExternalLink, Sparkles, Target, Zap, TrendingUp } from 'luc
 import { projects } from '../data/projects';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { isMobileDevice, shouldReduceMotion } from '../utils/deviceDetection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,33 +14,40 @@ const ProjectShowcase = ({ project, index }) => {
     const imageRef = useRef(null);
     const contentRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
-    const [isInView, setIsInView] = useState(false);
+    const isMobile = isMobileDevice();
+    const reduceMotion = shouldReduceMotion();
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+    // Disable heavy scroll animations on mobile
+    const y = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [100, -100]);
     const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+    const scale = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [1, 1, 1] : [0.8, 1, 0.8]);
 
     const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
     const smoothScale = useSpring(scale, { stiffness: 100, damping: 30 });
 
     useEffect(() => {
+        // Disable heavy GSAP animations on mobile
+        if (reduceMotion) return;
+
         const ctx = gsap.context(() => {
-            // Parallax effect for images
-            gsap.to(imageRef.current, {
-                yPercent: -20,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: 1
-                }
-            });
+            // Parallax effect for images - desktop only
+            if (!isMobile) {
+                gsap.to(imageRef.current, {
+                    yPercent: -20,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1
+                    }
+                });
+            }
 
             // Stagger animation for content
             const tl = gsap.timeline({
@@ -51,27 +59,16 @@ const ProjectShowcase = ({ project, index }) => {
             });
 
             tl.from(contentRef.current.querySelectorAll('.reveal-item'), {
-                y: 60,
+                y: isMobile ? 30 : 60,
                 opacity: 0,
-                duration: 0.8,
-                stagger: 0.15,
+                duration: isMobile ? 0.5 : 0.8,
+                stagger: isMobile ? 0.08 : 0.15,
                 ease: "power3.out"
-            });
-
-            // Track when element is in view for mobile animations
-            ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: "top 60%",
-                end: "bottom 40%",
-                onEnter: () => setIsInView(true),
-                onLeave: () => setIsInView(false),
-                onEnterBack: () => setIsInView(true),
-                onLeaveBack: () => setIsInView(false),
             });
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isMobile, reduceMotion]);
 
     const isEven = index % 2 === 0;
 
@@ -80,8 +77,8 @@ const ProjectShowcase = ({ project, index }) => {
             ref={containerRef}
             style={{ opacity }}
             className="min-h-screen flex items-center justify-center py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => !isMobile && setIsHovered(true)}
+            onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
             {/* Ambient Background Glow */}
             <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10 blur-3xl`}></div>
@@ -90,7 +87,7 @@ const ProjectShowcase = ({ project, index }) => {
 
                 {/* Visual Section with 3D Depth */}
                 <motion.div
-                    style={{ y: smoothY, scale: smoothScale }}
+                    style={isMobile ? {} : { y: smoothY, scale: smoothScale }}
                     className="flex-1 relative group"
                 >
                     {/* Floating Index Number */}
@@ -100,37 +97,16 @@ const ProjectShowcase = ({ project, index }) => {
 
                     {/* Main Visual Container */}
                     <div className="relative">
-                        {/* Glow Effect - Auto-animate on mobile when in view */}
-                        <motion.div 
-                            className={`absolute -inset-4 bg-gradient-to-r ${project.color} blur-2xl rounded-3xl`}
-                            animate={{
-                                opacity: isInView || isHovered ? [0.2, 0.4, 0.2] : 0
-                            }}
-                            transition={{
-                                duration: 3,
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                        ></motion.div>
+                        {/* Glow Effect */}
+                        <div className={`absolute -inset-4 bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-700 rounded-3xl`}></div>
 
                         {/* Device Mockup Container */}
                         <div className="relative" ref={imageRef}>
                             {project.desktopImage && (
                                 <motion.div
-                                    initial={{ rotateY: -15, rotateX: 5 }}
-                                    animate={{
-                                        // Auto-animate on mobile when in view - optimized for performance
-                                        rotateY: isInView ? [0, 5, 0, -5, 0] : 0,
-                                        rotateX: isInView ? [0, 2, 0] : 0,
-                                        scale: isInView ? [1, 1.02, 1] : 1
-                                    }}
-                                    whileHover={{ rotateY: 0, rotateX: 0, scale: 1.02 }}
-                                    transition={{ 
-                                        duration: 6, // Increased duration for smoother animation
-                                        repeat: isInView ? Infinity : 0,
-                                        ease: "easeInOut",
-                                        repeatDelay: 1 // Add delay between repeats
-                                    }}
+                                    initial={isMobile ? {} : { rotateY: -15, rotateX: 5 }}
+                                    whileHover={isMobile ? {} : { rotateY: 0, rotateX: 0, scale: 1.02 }}
+                                    transition={{ duration: 0.6, ease: "easeOut" }}
                                     className="relative perspective-1000"
                                 >
                                     {/* Desktop Browser Chrome */}
@@ -157,19 +133,12 @@ const ProjectShowcase = ({ project, index }) => {
                                 </motion.div>
                             )}
 
-                            {/* Mobile Mockup - Floating with auto-animation */}
+                            {/* Mobile Mockup - Floating */}
                             {project.mobileImage && (
                                 <motion.div
-                                    animate={{ 
-                                        y: isInView || isHovered ? [20, 0, 20] : 20,
-                                        rotate: isInView ? [0, 2, 0, -2, 0] : 0
-                                    }}
-                                    transition={{ 
-                                        duration: 5, // Smoother animation
-                                        repeat: isInView ? Infinity : 0,
-                                        ease: "easeInOut",
-                                        repeatDelay: 0.5
-                                    }}
+                                    initial={isMobile ? {} : { y: 20 }}
+                                    animate={isMobile ? {} : { y: isHovered ? 0 : 20 }}
+                                    transition={{ duration: 0.6 }}
                                     className={`absolute ${project.desktopImage ? '-bottom-6 -right-4 sm:-bottom-10 sm:-right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
                                 >
                                     <div className="relative">
@@ -193,26 +162,21 @@ const ProjectShowcase = ({ project, index }) => {
                             )}
                         </div>
 
-                        {/* Decorative Elements - Auto-animate */}
-                        <motion.div
-                            animate={{
-                                rotate: [0, 360],
-                                scale: isInView ? [1, 1.3, 1] : [1, 1.2, 1]
-                            }}
-                            transition={{
-                                rotate: {
+                        {/* Decorative Elements - Disabled on mobile for performance */}
+                        {!isMobile && (
+                            <motion.div
+                                animate={{
+                                    rotate: [0, 360],
+                                    scale: [1, 1.2, 1]
+                                }}
+                                transition={{
                                     duration: 20,
                                     repeat: Infinity,
                                     ease: "linear"
-                                },
-                                scale: {
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }
-                            }}
-                            className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl"
-                        ></motion.div>
+                                }}
+                                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl"
+                            ></motion.div>
+                        )}
                     </div>
                 </motion.div>
 
@@ -248,47 +212,29 @@ const ProjectShowcase = ({ project, index }) => {
                         {project.description}
                     </p>
 
-                    {/* Challenge, Solution, Impact Grid - Mobile optimized */}
+                    {/* Challenge, Solution, Impact Grid */}
                     <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-                        <motion.div 
-                            className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all active:scale-95"
-                            whileInView={isInView ? { 
-                                borderColor: ["rgba(239, 68, 68, 0.2)", "rgba(239, 68, 68, 0.4)", "rgba(239, 68, 68, 0.2)"]
-                            } : {}}
-                            transition={{ duration: 3, repeat: Infinity }}
-                        >
+                        <div className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all">
                             <Target className="w-6 h-6 md:w-8 md:h-8 text-red-400 mb-2 md:mb-3" />
                             <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Challenge</h4>
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 {project.details?.challenge?.substring(0, 80) || "Complex market positioning"}...
                             </p>
-                        </motion.div>
-                        <motion.div 
-                            className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all active:scale-95"
-                            whileInView={isInView ? { 
-                                borderColor: ["rgba(59, 130, 246, 0.2)", "rgba(59, 130, 246, 0.4)", "rgba(59, 130, 246, 0.2)"]
-                            } : {}}
-                            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
-                        >
+                        </div>
+                        <div className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all">
                             <Zap className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mb-2 md:mb-3" />
                             <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Solution</h4>
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 {project.details?.solution?.substring(0, 80) || "Custom interactive features"}...
                             </p>
-                        </motion.div>
-                        <motion.div 
-                            className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all sm:col-span-2 md:col-span-1 active:scale-95"
-                            whileInView={isInView ? { 
-                                borderColor: ["rgba(34, 197, 94, 0.2)", "rgba(34, 197, 94, 0.4)", "rgba(34, 197, 94, 0.2)"]
-                            } : {}}
-                            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                        >
+                        </div>
+                        <div className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all sm:col-span-2 md:col-span-1">
                             <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-green-400 mb-2 md:mb-3" />
                             <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Impact</h4>
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 Enhanced user engagement and conversions
                             </p>
-                        </motion.div>
+                        </div>
                     </div>
 
                     {/* Tech Tags */}
@@ -303,32 +249,22 @@ const ProjectShowcase = ({ project, index }) => {
                         ))}
                     </div>
 
-                    {/* CTA Buttons - Mobile optimized with touch feedback */}
+                    {/* CTA Buttons - Mobile optimized */}
                     <div className="reveal-item flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4">
                         <Link
                             to={`/project/${project.id}`}
-                            className="group/btn relative inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-gradient-to-r from-accent to-accent/80 text-primary font-bold text-sm sm:text-base rounded-2xl overflow-hidden shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40 transition-all w-full sm:w-auto active:scale-95"
+                            className="group/btn relative inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-gradient-to-r from-accent to-accent/80 text-primary font-bold text-sm sm:text-base rounded-2xl overflow-hidden shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40 transition-all w-full sm:w-auto"
                         >
                             <span className="relative z-10">View Case Study</span>
                             <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform relative z-10" />
-                            <motion.div 
-                                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
-                                animate={isInView ? { 
-                                    x: ['-100%', '100%']
-                                } : {}}
-                                transition={{ 
-                                    duration: 2,
-                                    repeat: Infinity,
-                                    repeatDelay: 3
-                                }}
-                            ></motion.div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
                         </Link>
                         {project.link !== '#' && (
                             <a
                                 href={project.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group/btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 rounded-2xl text-white font-semibold text-sm sm:text-base transition-all w-full sm:w-auto active:scale-95"
+                                className="group/btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 rounded-2xl text-white font-semibold text-sm sm:text-base transition-all w-full sm:w-auto"
                             >
                                 <span>Live Site</span>
                                 <ExternalLink className="w-5 h-5 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform" />

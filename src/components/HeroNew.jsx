@@ -9,13 +9,15 @@ import { isMobileDevice, isTouchDevice, shouldReduceMotion } from '../utils/devi
 
 const FloatingElement = ({ children, delay = 0, duration = 3 }) => {
     const reduceMotion = shouldReduceMotion();
+    const isMobile = isMobileDevice();
     
-    if (reduceMotion) {
-        return <div>{children}</div>;
+    if (reduceMotion || isMobile) {
+        return <div className="inline-block">{children}</div>;
     }
 
     return (
         <motion.div
+            className="inline-block"
             animate={{
                 y: [0, -20, 0],
                 rotate: [0, 5, -5, 0],
@@ -37,14 +39,15 @@ const MagneticButton = ({ children, href, className }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const isTouch = isTouchDevice();
+    const isMobile = isMobileDevice();
 
     const springConfig = { damping: 15, stiffness: 150 };
     const springX = useSpring(x, springConfig);
     const springY = useSpring(y, springConfig);
 
     const handleMouseMove = (e) => {
-        // Disable magnetic effect on touch devices
-        if (isTouch || !ref.current) return;
+        // Disable magnetic effect on touch devices and mobile
+        if (isTouch || isMobile || !ref.current) return;
         const rect = ref.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -57,7 +60,7 @@ const MagneticButton = ({ children, href, className }) => {
     };
 
     const handleMouseLeave = () => {
-        if (isTouch) return;
+        if (isTouch || isMobile) return;
         x.set(0);
         y.set(0);
     };
@@ -67,10 +70,10 @@ const MagneticButton = ({ children, href, className }) => {
             ref={ref}
             href={href}
             className={className}
-            style={isTouch ? {} : { x: springX, y: springY }}
+            style={(isTouch || isMobile) ? {} : { x: springX, y: springY }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            whileHover={isTouch ? {} : { scale: 1.05 }}
+            whileHover={(isTouch || isMobile) ? {} : { scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
         >
             {children}
@@ -225,19 +228,19 @@ const HeroNew = () => {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-500/5 rounded-full blur-3xl"></div>
 
             {/* Main Content */}
-            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-24 md:py-32">
-                <div className="text-center space-y-6 md:space-y-8">
+            <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
+                <div className="text-center space-y-6 md:space-y-8 max-w-full overflow-hidden">
 
                     {/* Badge */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="inline-flex"
+                        className="inline-flex w-full max-w-full justify-center px-2"
                     >
                         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent/20 to-accent/5 border border-accent/30 rounded-full backdrop-blur-md">
-                            <Sparkles className="w-4 h-4 text-accent animate-pulse" />
-                            <span className="text-accent font-semibold text-sm tracking-wide">Available for Projects</span>
+                            <Sparkles className="w-4 h-4 text-accent animate-pulse flex-shrink-0" />
+                            <span className="text-accent font-semibold text-sm tracking-wide whitespace-nowrap">Available for Projects</span>
                         </div>
                     </motion.div>
 
@@ -246,9 +249,9 @@ const HeroNew = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="space-y-4 md:space-y-6"
+                        className="space-y-4 md:space-y-6 w-full max-w-full overflow-hidden"
                     >
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-tight tracking-tight px-2">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-tight tracking-tight px-2 w-full break-words">
                             <span className="block">Crafting Digital</span>
                             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-yellow-400 to-accent animate-gradient-x">
                                 <Typewriter
@@ -269,7 +272,8 @@ const HeroNew = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-2"
+                        className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 w-full"
+                        style={{ maxWidth: '100%' }}
                     >
                         I transform ideas into stunning, high-performance websites that{' '}
                         <span className="text-white font-semibold">captivate</span>,{' '}
@@ -282,7 +286,7 @@ const HeroNew = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
-                        className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-2"
+                        className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-2 w-full max-w-full overflow-hidden"
                     >
                         {[
                             { icon: Code2, text: 'Modern Development', color: 'from-blue-500/20 to-blue-500/5 border-blue-500/30' },
@@ -290,8 +294,8 @@ const HeroNew = () => {
                             { icon: TrendingUp, text: 'SEO Optimized', color: 'from-green-500/20 to-green-500/5 border-green-500/30' },
                         ].map((item, index) => (
                             <FloatingElement key={index} delay={index * 0.2} duration={3 + index}>
-                                <div className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-gradient-to-r ${item.color} border rounded-full backdrop-blur-sm`}>
-                                    <item.icon className="w-3 h-3 md:w-4 md:h-4 text-white" />
+                                <div className={`flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-gradient-to-r ${item.color} border rounded-full backdrop-blur-sm whitespace-nowrap`}>
+                                    <item.icon className="w-3 h-3 md:w-4 md:h-4 text-white flex-shrink-0" />
                                     <span className="text-white text-xs md:text-sm font-medium">{item.text}</span>
                                 </div>
                             </FloatingElement>
@@ -303,11 +307,12 @@ const HeroNew = () => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
-                        className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 pt-8 w-full sm:w-auto px-4 sm:px-0"
+                        className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 pt-8 w-full max-w-full px-4 sm:px-0"
+                        style={{ maxWidth: '100%' }}
                     >
                         <MagneticButton
                             href="#work"
-                            className="group relative inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 min-h-[56px] bg-gradient-to-r from-accent to-green-400 text-primary font-bold text-base sm:text-lg rounded-2xl overflow-hidden shadow-2xl shadow-accent/30 hover:shadow-accent/50 transition-all duration-300 w-full sm:w-auto"
+                            className="group relative inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 min-h-[56px] bg-gradient-to-r from-accent to-green-400 text-primary font-bold text-base sm:text-lg rounded-2xl overflow-hidden shadow-2xl shadow-accent/30 hover:shadow-accent/50 transition-all duration-300 w-full sm:w-auto max-w-full"
                         >
                             <span className="relative z-10">View My Work</span>
                             <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform relative z-10" />
@@ -316,7 +321,7 @@ const HeroNew = () => {
 
                         <MagneticButton
                             href="#contact"
-                            className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 min-h-[56px] bg-white/5 hover:bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-accent/50 text-white font-semibold text-base sm:text-lg rounded-2xl transition-all duration-300 w-full sm:w-auto"
+                            className="group inline-flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 min-h-[56px] bg-white/5 hover:bg-white/10 backdrop-blur-sm border-2 border-white/20 hover:border-accent/50 text-white font-semibold text-base sm:text-lg rounded-2xl transition-all duration-300 w-full sm:w-auto max-w-full"
                         >
                             <span>Let's Talk</span>
                             <motion.div

@@ -9,7 +9,7 @@ import { isMobileDevice, isTouchDevice, shouldReduceMotion } from '../utils/devi
 
 const FloatingElement = ({ children, delay = 0, duration = 3 }) => {
     const reduceMotion = shouldReduceMotion();
-    const isMobile = isMobileDevice();
+    const isMobile = useMemo(() => isMobileDevice(), []);
     
     if (reduceMotion || isMobile) {
         return <div className="inline-block">{children}</div>;
@@ -39,7 +39,7 @@ const MagneticButton = ({ children, href, className }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const isTouch = isTouchDevice();
-    const isMobile = isMobileDevice();
+    const isMobile = useMemo(() => isMobileDevice(), []);
 
     const springConfig = { damping: 15, stiffness: 150 };
     const springX = useSpring(x, springConfig);

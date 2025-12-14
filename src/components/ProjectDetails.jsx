@@ -62,8 +62,8 @@ const ProjectDetails = () => {
                                 layoutId="toggleHighlight"
                                 initial={false}
                                 animate={{
-                                    x: viewMode === 'desktop' ? 0 : '50%',
-                                    width: '50%'
+                                    left: viewMode === 'desktop' ? '0.25rem' : 'calc(50% + 0.125rem)',
+                                    right: viewMode === 'desktop' ? 'calc(50% + 0.125rem)' : '0.25rem'
                                 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             />

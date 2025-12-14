@@ -177,7 +177,7 @@ const Process = () => {
                                             animate={{ rotate: -(-90 + (effectiveIndex - activeIndex) * spacing) }}
                                             transition={{ type: "spring", stiffness: 50, damping: 20 }}
                                         >
-                                            {React.cloneElement(step.icon, { size: isActive ? (window.innerWidth < 640 ? 20 : window.innerWidth < 768 ? 22 : 24) : (window.innerWidth < 640 ? 16 : window.innerWidth < 768 ? 18 : 20) })}
+                                            {React.cloneElement(step.icon, { size: isActive ? 24 : 20, className: 'sm:w-5 sm:h-5 md:w-6 md:h-6' })}
                                         </motion.div>
                                     </div>
                                 </div>

@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Phone, PenTool, Code, Rocket, Search, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Reveal from './Reveal';
+import { isMobileDevice, shouldReduceMotion } from '../utils/deviceDetection';
 
 const Process = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+    const isMobile = isMobileDevice();
+    const reduceMotion = shouldReduceMotion();
 
     const steps = [
         {
@@ -121,8 +124,8 @@ const Process = () => {
                 {/* Rotating Wheel Container */}
                 <motion.div
                     className="relative w-full h-[200px] sm:h-[220px] md:h-[360px] flex justify-center mt-8 sm:mt-12 md:mt-16 overflow-visible touch-pan-y"
-                    onMouseEnter={() => setIsAutoPlaying(false)}
-                    onMouseLeave={() => setIsAutoPlaying(true)}
+                    onMouseEnter={() => !isMobile && setIsAutoPlaying(false)}
+                    onMouseLeave={() => !isMobile && setIsAutoPlaying(true)}
                     onPanEnd={handlePanEnd}
                 >
                     {/* Static Semi-Circle Track (The "Hill") */}
@@ -132,7 +135,7 @@ const Process = () => {
                     <motion.div
                         className="absolute top-10 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[600px] md:h-[600px] rounded-full flex items-center justify-center pointer-events-none"
                         animate={{ rotate: -90 - (activeIndex * spacing) }}
-                        transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                        transition={reduceMotion ? { duration: 0.3 } : { type: "spring", stiffness: 50, damping: 20 }}
                     >
                         {steps.map((step, index) => {
                             // Calculate effective index to keep icons clustered around the active index
@@ -175,7 +178,7 @@ const Process = () => {
                                             //             = -90 + (effectiveIndex - activeIndex) * spacing
                                             // So we rotate by NEGATIVE of that.
                                             animate={{ rotate: -(-90 + (effectiveIndex - activeIndex) * spacing) }}
-                                            transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                                            transition={reduceMotion ? { duration: 0.3 } : { type: "spring", stiffness: 50, damping: 20 }}
                                         >
                                             {React.cloneElement(step.icon, { size: isActive ? 24 : 20, className: 'sm:w-5 sm:h-5 md:w-6 md:h-6' })}
                                         </motion.div>

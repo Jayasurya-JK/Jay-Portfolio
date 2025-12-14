@@ -5,6 +5,7 @@ import { ArrowRight, ExternalLink, Sparkles, Target, Zap, TrendingUp } from 'luc
 import { projects } from '../data/projects';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { isMobileDevice, shouldReduceMotion } from '../utils/deviceDetection';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -13,32 +14,40 @@ const ProjectShowcase = ({ project, index }) => {
     const imageRef = useRef(null);
     const contentRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
+    const isMobile = isMobileDevice();
+    const reduceMotion = shouldReduceMotion();
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start end", "end start"]
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+    // Disable heavy scroll animations on mobile
+    const y = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [100, -100]);
     const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+    const scale = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [1, 1, 1] : [0.8, 1, 0.8]);
 
     const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
     const smoothScale = useSpring(scale, { stiffness: 100, damping: 30 });
 
     useEffect(() => {
+        // Disable heavy GSAP animations on mobile
+        if (reduceMotion) return;
+
         const ctx = gsap.context(() => {
-            // Parallax effect for images
-            gsap.to(imageRef.current, {
-                yPercent: -20,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: 1
-                }
-            });
+            // Parallax effect for images - desktop only
+            if (!isMobile) {
+                gsap.to(imageRef.current, {
+                    yPercent: -20,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1
+                    }
+                });
+            }
 
             // Stagger animation for content
             const tl = gsap.timeline({
@@ -50,16 +59,16 @@ const ProjectShowcase = ({ project, index }) => {
             });
 
             tl.from(contentRef.current.querySelectorAll('.reveal-item'), {
-                y: 60,
+                y: isMobile ? 30 : 60,
                 opacity: 0,
-                duration: 0.8,
-                stagger: 0.15,
+                duration: isMobile ? 0.5 : 0.8,
+                stagger: isMobile ? 0.08 : 0.15,
                 ease: "power3.out"
             });
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isMobile, reduceMotion]);
 
     const isEven = index % 2 === 0;
 
@@ -68,8 +77,8 @@ const ProjectShowcase = ({ project, index }) => {
             ref={containerRef}
             style={{ opacity }}
             className="min-h-screen flex items-center justify-center py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={() => !isMobile && setIsHovered(true)}
+            onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
             {/* Ambient Background Glow */}
             <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10 blur-3xl`}></div>
@@ -78,7 +87,7 @@ const ProjectShowcase = ({ project, index }) => {
 
                 {/* Visual Section with 3D Depth */}
                 <motion.div
-                    style={{ y: smoothY, scale: smoothScale }}
+                    style={isMobile ? {} : { y: smoothY, scale: smoothScale }}
                     className="flex-1 relative group"
                 >
                     {/* Floating Index Number */}
@@ -95,8 +104,8 @@ const ProjectShowcase = ({ project, index }) => {
                         <div className="relative" ref={imageRef}>
                             {project.desktopImage && (
                                 <motion.div
-                                    initial={{ rotateY: -15, rotateX: 5 }}
-                                    whileHover={{ rotateY: 0, rotateX: 0, scale: 1.02 }}
+                                    initial={isMobile ? {} : { rotateY: -15, rotateX: 5 }}
+                                    whileHover={isMobile ? {} : { rotateY: 0, rotateX: 0, scale: 1.02 }}
                                     transition={{ duration: 0.6, ease: "easeOut" }}
                                     className="relative perspective-1000"
                                 >
@@ -127,8 +136,8 @@ const ProjectShowcase = ({ project, index }) => {
                             {/* Mobile Mockup - Floating */}
                             {project.mobileImage && (
                                 <motion.div
-                                    initial={{ y: 20 }}
-                                    animate={{ y: isHovered ? 0 : 20 }}
+                                    initial={isMobile ? {} : { y: 20 }}
+                                    animate={isMobile ? {} : { y: isHovered ? 0 : 20 }}
                                     transition={{ duration: 0.6 }}
                                     className={`absolute ${project.desktopImage ? '-bottom-6 -right-4 sm:-bottom-10 sm:-right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
                                 >
@@ -153,19 +162,21 @@ const ProjectShowcase = ({ project, index }) => {
                             )}
                         </div>
 
-                        {/* Decorative Elements */}
-                        <motion.div
-                            animate={{
-                                rotate: [0, 360],
-                                scale: [1, 1.2, 1]
-                            }}
-                            transition={{
-                                duration: 20,
-                                repeat: Infinity,
-                                ease: "linear"
-                            }}
-                            className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl"
-                        ></motion.div>
+                        {/* Decorative Elements - Disabled on mobile for performance */}
+                        {!isMobile && (
+                            <motion.div
+                                animate={{
+                                    rotate: [0, 360],
+                                    scale: [1, 1.2, 1]
+                                }}
+                                transition={{
+                                    duration: 20,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl"
+                            ></motion.div>
+                        )}
                     </div>
                 </motion.div>
 

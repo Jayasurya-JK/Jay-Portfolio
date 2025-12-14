@@ -1,8 +1,8 @@
 import React from 'react';
 import Navbar from './Navbar';
-import Hero from './Hero';
+import HeroNew from './HeroNew';
 import Services from './Services';
-import FeaturedWork from './FeaturedWork';
+import FeaturedWorkNew from './FeaturedWorkNew';
 import Process from './Process';
 import USP from './USP';
 import About from './About';
@@ -14,9 +14,9 @@ const Home = () => {
         <div className="bg-primary min-h-screen font-sans text-gray-100 selection:bg-accent selection:text-primary overflow-x-hidden">
             <Navbar />
             <main>
-                <Hero />
+                <HeroNew />
                 <Services />
-                <FeaturedWork />
+                <FeaturedWorkNew />
                 <Process />
                 <USP />
                 <About />

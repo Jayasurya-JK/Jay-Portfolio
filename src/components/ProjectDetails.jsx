@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Monitor, Smartphone, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { projects } from '../data/projects';
+import Reveal from './Reveal';
 
 const ProjectDetails = () => {
     const { id } = useParams();
@@ -140,31 +141,37 @@ const ProjectDetails = () => {
                 {/* Deep Dive Content */}
                 <div className="grid md:grid-cols-3 gap-12">
                     <div className="md:col-span-2 space-y-8">
-                        <section>
-                            <h2 className="text-2xl font-bold text-white mb-4">The Challenge</h2>
-                            <p className="text-gray-300 leading-relaxed text-lg">
-                                {project.details.challenge}
-                            </p>
-                        </section>
-                        <section>
-                            <h2 className="text-2xl font-bold text-white mb-4">The Solution</h2>
-                            <p className="text-gray-300 leading-relaxed text-lg">
-                                {project.details.solution}
-                            </p>
-                        </section>
+                        <Reveal>
+                            <section>
+                                <h2 className="text-2xl font-bold text-white mb-4">The Challenge</h2>
+                                <p className="text-gray-300 leading-relaxed text-lg">
+                                    {project.details.challenge}
+                                </p>
+                            </section>
+                        </Reveal>
+                        <Reveal delay={0.2}>
+                            <section>
+                                <h2 className="text-2xl font-bold text-white mb-4">The Solution</h2>
+                                <p className="text-gray-300 leading-relaxed text-lg">
+                                    {project.details.solution}
+                                </p>
+                            </section>
+                        </Reveal>
                     </div>
 
-                    <div className="bg-secondary/20 p-6 rounded-2xl border border-white/5 h-fit">
-                        <h3 className="text-xl font-bold text-white mb-6">Key Features</h3>
-                        <ul className="space-y-6">
-                            {project.details.features.map((feature, idx) => (
-                                <li key={idx}>
-                                    <h4 className="text-accent font-medium mb-1">{feature.title}</h4>
-                                    <p className="text-sm text-gray-400">{feature.desc}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <Reveal delay={0.4}>
+                        <div className="bg-secondary/20 p-6 rounded-2xl border border-white/5 h-fit">
+                            <h3 className="text-xl font-bold text-white mb-6">Key Features</h3>
+                            <ul className="space-y-6">
+                                {project.details.features.map((feature, idx) => (
+                                    <li key={idx}>
+                                        <h4 className="text-accent font-medium mb-1">{feature.title}</h4>
+                                        <p className="text-sm text-gray-400">{feature.desc}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </Reveal>
                 </div>
             </div>
         </div>

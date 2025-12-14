@@ -1,6 +1,7 @@
 import React from 'react';
 import { Globe, Image, Server, Check, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Reveal from './Reveal';
 
 const Services = () => {
     const services = [
@@ -42,28 +43,30 @@ const Services = () => {
     return (
         <section id="services" className="py-12 md:py-20 bg-secondary/30 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-8 md:mb-16 flex justify-between items-end">
-                    <div className="text-left">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What I can do for you</h2>
-                        <p className="text-gray-400 max-w-2xl">
-                            Simple, focused services that give your business a real online presence.
-                        </p>
+                <Reveal>
+                    <div className="mb-8 md:mb-16 flex justify-between items-end">
+                        <div className="text-left">
+                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What I can do for you</h2>
+                            <p className="text-gray-400 max-w-2xl">
+                                Simple, focused services that give your business a real online presence.
+                            </p>
+                        </div>
+                        {/* Mobile Swipe Hint */}
+                        <div className="md:hidden text-accent text-sm font-medium animate-pulse flex items-center gap-2 mb-1">
+                            Swipe <ArrowRight size={16} />
+                        </div>
                     </div>
-                    {/* Mobile Swipe Hint */}
-                    <div className="md:hidden text-accent text-sm font-medium animate-pulse flex items-center gap-2 mb-1">
-                        Swipe <ArrowRight size={16} />
-                    </div>
-                </div>
+                </Reveal>
 
                 {/* Mobile: Horizontal Scroll | Desktop: Grid */}
                 <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 scrollbar-hide">
                     {services.map((service, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
                             className="min-w-[85vw] md:min-w-0 snap-center bg-secondary border border-white/5 rounded-2xl p-6 md:p-8 hover:border-accent/30 transition-all hover:-translate-y-1 duration-300 flex flex-col h-full"
                         >
                             <div className="bg-primary/50 w-14 h-14 rounded-xl flex items-center justify-center mb-6 border border-white/5">

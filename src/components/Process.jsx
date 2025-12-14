@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, PenTool, Code, Rocket, Search, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Reveal from './Reveal';
 
 const Process = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -88,10 +89,12 @@ const Process = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
 
                 {/* Header */}
-                <div className="text-center mb-8 md:mb-12">
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">How we work together</h2>
-                    <p className="text-gray-400">Our proven process for delivering results.</p>
-                </div>
+                <Reveal>
+                    <div className="text-center mb-8 md:mb-12">
+                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">How we work together</h2>
+                        <p className="text-gray-400">Our proven process for delivering results.</p>
+                    </div>
+                </Reveal>
 
                 {/* Active Content Display */}
                 <div className="relative h-[260px] md:h-[200px] max-w-2xl mx-auto text-center mb-12">

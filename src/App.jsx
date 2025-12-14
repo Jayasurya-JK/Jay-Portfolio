@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import ProjectDetails from './components/ProjectDetails';
+import SmoothScroll from './components/SmoothScroll';
 import { useEffect } from 'react';
 
 // Scroll to top on route change
@@ -16,6 +17,7 @@ const ScrollToTop = () => {
 function App() {
   return (
     <Router>
+      <SmoothScroll />
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />

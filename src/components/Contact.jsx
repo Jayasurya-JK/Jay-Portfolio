@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MessageCircle, Send } from 'lucide-react';
+import Reveal from './Reveal';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -30,15 +31,19 @@ const Contact = () => {
             .catch((error) => alert(error));
     };
 
+
+
     return (
         <section id="contact" className="py-12 md:py-20 bg-secondary/30">
             <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-8 md:mb-12">
-                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Let’s build your online presence</h2>
-                    <p className="text-gray-400">
-                        Tell me a bit about your business. I’ll reply with ideas and a simple plan.
-                    </p>
-                </div>
+                <Reveal>
+                    <div className="text-center mb-8 md:mb-12">
+                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Let’s build your online presence</h2>
+                        <p className="text-gray-400">
+                            Tell me a bit about your business. I’ll reply with ideas and a simple plan.
+                        </p>
+                    </div>
+                </Reveal>
 
                 <div className="bg-secondary p-6 md:p-8 rounded-2xl border border-white/10 shadow-xl">
                     <form name="contact" method="POST" data-netlify="true" onSubmit={handleSubmit} className="space-y-6">

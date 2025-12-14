@@ -3,6 +3,7 @@ import { ExternalLink, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { projects } from '../data/projects';
+import Reveal from './Reveal';
 
 const DeviceMockup = ({ type, src, alt }) => {
     if (type === 'mobile') {
@@ -34,28 +35,30 @@ const FeaturedWork = () => {
     return (
         <section id="work" className="py-12 md:py-20 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-8 md:mb-16 flex justify-between items-end">
-                    <div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Selected work</h2>
-                        <p className="text-gray-400">
-                            Real projects that drive business results.
-                        </p>
+                <Reveal>
+                    <div className="mb-8 md:mb-16 flex justify-between items-end">
+                        <div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Selected work</h2>
+                            <p className="text-gray-400">
+                                Real projects that drive business results.
+                            </p>
+                        </div>
+                        {/* Mobile Swipe Hint */}
+                        <div className="md:hidden text-accent text-sm font-medium animate-pulse flex items-center gap-2">
+                            Swipe to explore <ArrowRight size={16} />
+                        </div>
                     </div>
-                    {/* Mobile Swipe Hint */}
-                    <div className="md:hidden text-accent text-sm font-medium animate-pulse flex items-center gap-2">
-                        Swipe to explore <ArrowRight size={16} />
-                    </div>
-                </div>
+                </Reveal>
 
                 {/* Mobile: Horizontal Scroll Snap | Desktop: Vertical Stack */}
                 <div className="flex md:block overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-4 pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:space-y-16 scrollbar-hide">
                     {projects.map((project, index) => (
                         <motion.div
                             key={index}
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 75 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
                             className="min-w-[85vw] md:min-w-full snap-center group relative bg-secondary rounded-3xl overflow-hidden border border-white/10 hover:border-accent/30 transition-all"
                         >
                             {/* Abstract Background */}

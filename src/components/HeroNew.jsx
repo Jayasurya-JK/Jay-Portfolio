@@ -273,7 +273,6 @@ const HeroNew = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 w-full"
-                        style={{ maxWidth: '100%' }}
                     >
                         I transform ideas into stunning, high-performance websites that{' '}
                         <span className="text-white font-semibold">captivate</span>,{' '}
@@ -308,7 +307,6 @@ const HeroNew = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
                         className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 pt-8 w-full max-w-full px-4 sm:px-0"
-                        style={{ maxWidth: '100%' }}
                     >
                         <MagneticButton
                             href="#work"

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Globe, Image, Server, Check } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 import { shouldReduceMotion, isMobileDevice } from '../utils/deviceDetection';
 
 const Services = () => {
@@ -170,7 +170,6 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
     const Icon = service.icon;
     const isActive = index === activeCard;
     const isPast = index < activeCard;
-    const isFuture = index > activeCard;
 
     // Apple-style 3D transform calculations
     const getTransform = () => {

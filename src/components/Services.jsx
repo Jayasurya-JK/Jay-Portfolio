@@ -87,7 +87,7 @@ const Services = () => {
                     className="text-center"
                 >
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-                        What I can do for you
+                        What Will I Do For You
                     </h2>
                     <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
                         Simple, focused services that give your business a real online presence.

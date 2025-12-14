@@ -246,29 +246,47 @@ const ProjectShowcase = ({ project, index }) => {
                         {project.description}
                     </p>
 
-                    {/* Challenge, Solution, Impact Grid */}
+                    {/* Challenge, Solution, Impact Grid - Mobile optimized */}
                     <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-                        <div className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all">
+                        <motion.div 
+                            className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all active:scale-95"
+                            whileInView={isInView ? { 
+                                borderColor: ["rgba(239, 68, 68, 0.2)", "rgba(239, 68, 68, 0.4)", "rgba(239, 68, 68, 0.2)"]
+                            } : {}}
+                            transition={{ duration: 3, repeat: Infinity }}
+                        >
                             <Target className="w-6 h-6 md:w-8 md:h-8 text-red-400 mb-2 md:mb-3" />
                             <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Challenge</h4>
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 {project.details?.challenge?.substring(0, 80) || "Complex market positioning"}...
                             </p>
-                        </div>
-                        <div className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all">
+                        </motion.div>
+                        <motion.div 
+                            className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all active:scale-95"
+                            whileInView={isInView ? { 
+                                borderColor: ["rgba(59, 130, 246, 0.2)", "rgba(59, 130, 246, 0.4)", "rgba(59, 130, 246, 0.2)"]
+                            } : {}}
+                            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                        >
                             <Zap className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mb-2 md:mb-3" />
                             <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Solution</h4>
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 {project.details?.solution?.substring(0, 80) || "Custom interactive features"}...
                             </p>
-                        </div>
-                        <div className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all sm:col-span-2 md:col-span-1">
+                        </motion.div>
+                        <motion.div 
+                            className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all sm:col-span-2 md:col-span-1 active:scale-95"
+                            whileInView={isInView ? { 
+                                borderColor: ["rgba(34, 197, 94, 0.2)", "rgba(34, 197, 94, 0.4)", "rgba(34, 197, 94, 0.2)"]
+                            } : {}}
+                            transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                        >
                             <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-green-400 mb-2 md:mb-3" />
                             <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Impact</h4>
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
                                 Enhanced user engagement and conversions
                             </p>
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Tech Tags */}
@@ -283,22 +301,32 @@ const ProjectShowcase = ({ project, index }) => {
                         ))}
                     </div>
 
-                    {/* CTA Buttons - Mobile optimized */}
+                    {/* CTA Buttons - Mobile optimized with touch feedback */}
                     <div className="reveal-item flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4">
                         <Link
                             to={`/project/${project.id}`}
-                            className="group/btn relative inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-gradient-to-r from-accent to-accent/80 text-primary font-bold text-sm sm:text-base rounded-2xl overflow-hidden shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40 transition-all w-full sm:w-auto"
+                            className="group/btn relative inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-gradient-to-r from-accent to-accent/80 text-primary font-bold text-sm sm:text-base rounded-2xl overflow-hidden shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40 transition-all w-full sm:w-auto active:scale-95"
                         >
                             <span className="relative z-10">View Case Study</span>
                             <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform relative z-10" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
+                            <motion.div 
+                                className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
+                                animate={isInView ? { 
+                                    x: ['-100%', '100%']
+                                } : {}}
+                                transition={{ 
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    repeatDelay: 3
+                                }}
+                            ></motion.div>
                         </Link>
                         {project.link !== '#' && (
                             <a
                                 href={project.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group/btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 rounded-2xl text-white font-semibold text-sm sm:text-base transition-all w-full sm:w-auto"
+                                className="group/btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 rounded-2xl text-white font-semibold text-sm sm:text-base transition-all w-full sm:w-auto active:scale-95"
                             >
                                 <span>Live Site</span>
                                 <ExternalLink className="w-5 h-5 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform" />

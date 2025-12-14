@@ -246,14 +246,12 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
                 y: transform.y,
                 rotateX: transform.rotateX,
                 rotateY: transform.rotateY,
+                z: transform.z,
                 opacity: transform.opacity,
-                zIndex: transform.zIndex,
             }}
             style={{
                 transformStyle: 'preserve-3d',
-                ...(isMobile ? {} : {
-                    translateZ: transform.z,
-                }),
+                zIndex: transform.zIndex,
             }}
             transition={{
                 type: "spring",
@@ -269,7 +267,6 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
                     boxShadow: isActive 
                         ? '0 30px 90px -20px rgba(0, 0, 0, 0.6), 0 0 80px -10px rgba(0, 255, 135, 0.1)' 
                         : '0 10px 40px -10px rgba(0, 0, 0, 0.4)',
-                    transform: isMobile ? 'none' : `translateZ(${transform.z}px)`,
                 }}
             >
                 {/* Enhanced glassmorphism overlay */}
@@ -287,12 +284,12 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
                     <div className="relative w-20 h-20 md:w-24 md:h-24 mb-6 md:mb-8">
                         <motion.div
                             className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/30 to-accent/10 border border-accent/30 backdrop-blur-sm"
-                            animate={reduceMotion ? {} : {
-                                rotate: isActive ? [0, 360] : 0,
+                            animate={reduceMotion || !isActive ? {} : {
+                                rotate: [0, 360],
                             }}
-                            transition={{
+                            transition={!isActive ? undefined : {
                                 duration: 20,
-                                repeat: isActive ? Infinity : 0,
+                                repeat: Infinity,
                                 ease: "linear"
                             }}
                             style={{
@@ -301,12 +298,12 @@ const AppleStackedCard = ({ service, index, activeCard, totalCards, isMobile, re
                         />
                         <motion.div
                             className="absolute inset-2 rounded-xl bg-gradient-to-br from-accent/40 to-accent/10 flex items-center justify-center"
-                            animate={reduceMotion ? {} : {
-                                scale: isActive ? [1, 1.05, 1] : 1,
+                            animate={reduceMotion || !isActive ? {} : {
+                                scale: [1, 1.05, 1],
                             }}
-                            transition={{
+                            transition={!isActive ? undefined : {
                                 duration: 2,
-                                repeat: isActive ? Infinity : 0,
+                                repeat: Infinity,
                                 ease: "easeInOut"
                             }}
                         >

@@ -35,7 +35,7 @@ const USP = () => {
     const containerRef = useRef(null);
     const isInView = useInView(containerRef, { once: false, amount: 0.3 });
 
-    // Auto-play effect for mobile
+    // Auto-play effect for mobile - only when in view
     useEffect(() => {
         if (!isInView) return;
         
@@ -169,11 +169,14 @@ const USP = () => {
                     </div>
 
                     {/* Mobile progress indicator */}
-                    <div className="flex md:hidden justify-center gap-2 mt-6">
+                    <div className="flex md:hidden justify-center gap-2 mt-6" role="tablist" aria-label="USP navigation">
                         {usps.map((_, index) => (
                             <motion.button
                                 key={index}
                                 onClick={() => setAutoplayIndex(index)}
+                                aria-label={`Go to slide ${index + 1}`}
+                                role="tab"
+                                aria-selected={autoplayIndex === index}
                                 className={`h-2 rounded-full transition-all ${
                                     autoplayIndex === index 
                                         ? 'w-8 bg-accent' 

@@ -132,7 +132,7 @@ const About = () => {
                                     
                                     <div className="pt-4 border-t border-white/10">
                                         <p className="text-base sm:text-lg md:text-xl font-semibold text-white text-center">
-                                            My goal is simple: make it easy and affordable for you to have a professional online presence. 🎯
+                                            My goal is simple: make it easy and affordable for you to have a professional online presence.
                                         </p>
                                     </div>
                                 </div>

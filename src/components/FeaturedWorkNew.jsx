@@ -119,16 +119,17 @@ const ProjectShowcase = ({ project, index }) => {
                                 <motion.div
                                     initial={{ rotateY: -15, rotateX: 5 }}
                                     animate={{
-                                        // Auto-animate on mobile when in view
-                                        rotateY: isInView ? [0, 5, 0, -5, 0] : -15,
-                                        rotateX: isInView ? [0, 2, 0] : 5,
+                                        // Auto-animate on mobile when in view - optimized for performance
+                                        rotateY: isInView ? [0, 5, 0, -5, 0] : 0,
+                                        rotateX: isInView ? [0, 2, 0] : 0,
                                         scale: isInView ? [1, 1.02, 1] : 1
                                     }}
                                     whileHover={{ rotateY: 0, rotateX: 0, scale: 1.02 }}
                                     transition={{ 
-                                        duration: 4,
+                                        duration: 6, // Increased duration for smoother animation
                                         repeat: isInView ? Infinity : 0,
-                                        ease: "easeInOut"
+                                        ease: "easeInOut",
+                                        repeatDelay: 1 // Add delay between repeats
                                     }}
                                     className="relative perspective-1000"
                                 >
@@ -164,9 +165,10 @@ const ProjectShowcase = ({ project, index }) => {
                                         rotate: isInView ? [0, 2, 0, -2, 0] : 0
                                     }}
                                     transition={{ 
-                                        duration: 4,
+                                        duration: 5, // Smoother animation
                                         repeat: isInView ? Infinity : 0,
-                                        ease: "easeInOut"
+                                        ease: "easeInOut",
+                                        repeatDelay: 0.5
                                     }}
                                     className={`absolute ${project.desktopImage ? '-bottom-6 -right-4 sm:-bottom-10 sm:-right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
                                 >

@@ -61,8 +61,9 @@ const Services = () => {
 
     // Update active card based on scroll position
     useEffect(() => {
+        const totalCards = services.length;
         const unsubscribe = scrollYProgress.on('change', (latest) => {
-            const cardIndex = Math.min(Math.floor(latest * services.length * 1.5), services.length - 1);
+            const cardIndex = Math.min(Math.floor(latest * totalCards * 1.5), totalCards - 1);
             setActiveCard(Math.max(0, cardIndex));
         });
 
@@ -133,7 +134,7 @@ const Services = () => {
             {/* Background Gradient Orbs */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <motion.div
-                    className={`absolute top-1/4 -right-20 w-96 h-96 ${services[activeCard]?.orbColor} rounded-full blur-3xl`}
+                    className={`absolute top-1/4 -right-20 w-96 h-96 ${services[activeCard]?.orbColor || 'bg-accent/20'} rounded-full blur-3xl`}
                     animate={{
                         scale: [1, 1.2, 1],
                         opacity: [0.3, 0.5, 0.3],
@@ -145,7 +146,7 @@ const Services = () => {
                     }}
                 />
                 <motion.div
-                    className={`absolute bottom-1/4 -left-20 w-96 h-96 ${services[activeCard]?.orbColor} rounded-full blur-3xl`}
+                    className={`absolute bottom-1/4 -left-20 w-96 h-96 ${services[activeCard]?.orbColor || 'bg-accent/20'} rounded-full blur-3xl`}
                     animate={{
                         scale: [1.2, 1, 1.2],
                         opacity: [0.5, 0.3, 0.5],
@@ -229,7 +230,7 @@ const StackedCard = ({ service, index, activeCard, totalCards, isMobile, reduceM
             }}
         >
             <div 
-                className={`relative backdrop-blur-xl bg-gradient-to-br ${service.gradient} border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl overflow-hidden`}
+                className="relative backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 shadow-2xl overflow-hidden"
                 style={{
                     background: `linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(26, 26, 46, 0.7) 100%)`,
                 }}

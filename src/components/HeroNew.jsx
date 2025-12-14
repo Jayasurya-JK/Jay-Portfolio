@@ -85,7 +85,7 @@ const HeroNew = () => {
     const [init, setInit] = useState(false);
     const heroRef = useRef(null);
     const cursorRef = useRef(null);
-    const isMobile = isMobileDevice();
+    const isMobile = useMemo(() => isMobileDevice(), []);
     const isTouch = isTouchDevice();
 
     // Custom cursor effect - Desktop only

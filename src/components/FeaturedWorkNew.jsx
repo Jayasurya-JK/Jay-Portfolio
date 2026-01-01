@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink, Sparkles, Target, Zap, TrendingUp } from 'lucide-react';
+import { ArrowRight, ExternalLink, Sparkles } from 'lucide-react';
 import { projects } from '../data/projects';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,16 +19,13 @@ const ProjectShowcase = ({ project, index }) => {
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
-        offset: ["start end", "end start"]
+        offset: ["start end", "start start"]
     });
 
-    // Disable heavy scroll animations when motion should be reduced
-    const y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [100, -100]);
-    const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-    const scale = useTransform(scrollYProgress, [0, 0.5, 1], reduceMotion ? [1, 1, 1] : [0.8, 1, 0.8]);
+    const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+    const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 0.8, 1]);
 
-    const smoothY = useSpring(y, { stiffness: 100, damping: 30 });
-    const smoothScale = useSpring(scale, { stiffness: 100, damping: 30 });
+
 
     useEffect(() => {
         // Disable heavy GSAP animations on mobile
@@ -75,25 +72,30 @@ const ProjectShowcase = ({ project, index }) => {
     return (
         <motion.div
             ref={containerRef}
-            style={{ opacity }}
-            className="min-h-screen flex items-center justify-center py-12 md:py-20 px-4 sm:px-6 md:px-8 relative overflow-hidden"
+            style={{
+                scale: reduceMotion ? 1 : scale,
+                opacity: reduceMotion ? 1 : opacity
+            }}
+            className="relative md:sticky md:top-0 min-h-screen md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8"
             onMouseEnter={() => !isMobile && setIsHovered(true)}
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
             {/* Ambient Background Glow */}
             <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10 blur-3xl`}></div>
 
+
+
             <div className={`max-w-7xl w-full mx-auto flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 md:gap-12 lg:gap-20 items-center relative z-10`}>
 
                 {/* Visual Section with 3D Depth */}
                 <motion.div
-                    style={reduceMotion ? {} : { y: smoothY, scale: smoothScale }}
                     className="flex-1 relative group"
                 >
                     {/* Floating Index Number */}
-                    <div className="absolute -top-6 -left-4 md:-top-10 md:-left-10 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/5 select-none pointer-events-none z-0">
+                    <div className="absolute -top-16 left-0 md:-top-24 md:-left-12 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/20 select-none pointer-events-none z-0">
                         {String(index + 1).padStart(2, '0')}
                     </div>
+
 
                     {/* Main Visual Container */}
                     <div className="relative">
@@ -117,8 +119,9 @@ const ProjectShowcase = ({ project, index }) => {
                                                 <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                                                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
                                             </div>
-                                            <div className="flex-1 bg-gray-700/50 rounded-md px-3 py-1 text-xs text-gray-400 ml-4">
-                                                {project.link !== '#' ? new URL(project.link).hostname : 'project-demo.com'}
+                                            {/* Browser Address Bar */}
+                                            <div className="ml-4 bg-[#1a1a1a] rounded-full px-4 py-0.5 md:py-1 text-[8px] md:text-[10px] text-gray-500 flex-1 text-center font-mono">
+                                                {project.domain || "project-demo.com"}
                                             </div>
                                         </div>
                                     </div>
@@ -143,10 +146,8 @@ const ProjectShowcase = ({ project, index }) => {
                                 >
                                     <div className="relative">
                                         {/* Phone Frame */}
-                                        <div className="w-32 sm:w-40 md:w-48 lg:w-56 bg-gray-900 rounded-[2rem] md:rounded-[2.5rem] p-1.5 md:p-2 shadow-2xl border-2 md:border-4 border-gray-800">
-                                            <div className="w-full bg-gray-800 rounded-[1.75rem] md:rounded-[2rem] overflow-hidden relative">
-                                                {/* Notch */}
-                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-4 md:h-6 bg-gray-900 rounded-b-2xl z-10"></div>
+                                        <div className="w-32 sm:w-40 md:w-48 lg:w-56 bg-gray-900 rounded-[1rem] md:rounded-[2rem] p-1.5 md:p-2 shadow-2xl border-[4px] md:border-4 border-gray-800">
+                                            <div className="w-full bg-gray-800 rounded-[0.85rem] md:rounded-[1.8rem] overflow-hidden relative">
                                                 {/* Screen */}
                                                 <img
                                                     src={project.mobileImage}
@@ -212,42 +213,7 @@ const ProjectShowcase = ({ project, index }) => {
                         {project.description}
                     </p>
 
-                    {/* Challenge, Solution, Impact Grid */}
-                    <div className="reveal-item grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
-                        <div className="group/card bg-gradient-to-br from-red-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-red-500/20 hover:border-red-500/40 transition-all">
-                            <Target className="w-6 h-6 md:w-8 md:h-8 text-red-400 mb-2 md:mb-3" />
-                            <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Challenge</h4>
-                            <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
-                                {project.details?.challenge?.substring(0, 80) || "Complex market positioning"}...
-                            </p>
-                        </div>
-                        <div className="group/card bg-gradient-to-br from-blue-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-blue-500/20 hover:border-blue-500/40 transition-all">
-                            <Zap className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mb-2 md:mb-3" />
-                            <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Solution</h4>
-                            <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
-                                {project.details?.solution?.substring(0, 80) || "Custom interactive features"}...
-                            </p>
-                        </div>
-                        <div className="group/card bg-gradient-to-br from-green-500/10 to-transparent p-4 md:p-6 rounded-xl md:rounded-2xl border border-green-500/20 hover:border-green-500/40 transition-all sm:col-span-2 md:col-span-1">
-                            <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-green-400 mb-2 md:mb-3" />
-                            <h4 className="text-white font-bold text-xs md:text-sm uppercase tracking-wide mb-1 md:mb-2">Impact</h4>
-                            <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">
-                                Enhanced user engagement and conversions
-                            </p>
-                        </div>
-                    </div>
 
-                    {/* Tech Tags */}
-                    <div className="reveal-item flex flex-wrap gap-2">
-                        {project.tags.map((tag, idx) => (
-                            <span
-                                key={idx}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl text-sm text-gray-300 font-medium transition-all cursor-default"
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
 
                     {/* CTA Buttons - Mobile optimized */}
                     <div className="reveal-item flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4">
@@ -298,7 +264,7 @@ const FeaturedWorkNew = () => {
     }, []);
 
     return (
-        <section id="work" ref={sectionRef} className="relative py-20 overflow-hidden bg-gradient-to-b from-primary via-primary to-secondary">
+        <section id="work" ref={sectionRef} className="relative pt-20 pb-10 overflow-hidden bg-gradient-to-b from-primary via-primary to-secondary">
             {/* Animated Background Pattern */}
             <div className="absolute inset-0 opacity-5">
                 <div className="absolute inset-0" style={{
@@ -308,7 +274,7 @@ const FeaturedWorkNew = () => {
             </div>
 
             {/* Section Header */}
-            <div className="section-title max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-12 md:mb-20 relative z-10">
+            <div className="section-title max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mb-2 md:mb-20 relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -332,26 +298,7 @@ const FeaturedWorkNew = () => {
                 ))}
             </div>
 
-            {/* Coming Soon Teaser */}
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="max-w-4xl mx-auto mt-20 px-4"
-            >
-                <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-purple-500/20 blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                    <div className="relative bg-gradient-to-br from-secondary/80 to-primary/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 text-center">
-                        <Sparkles className="w-12 h-12 text-accent mx-auto mb-4" />
-                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
-                            More Coming Soon
-                        </h3>
-                        <p className="text-gray-300 text-lg">
-                            Ready-made website templates for CAs, lawyers, clinics, gyms, real estate promoters, and more.
-                        </p>
-                    </div>
-                </div>
-            </motion.div>
+
         </section>
     );
 };

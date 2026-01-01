@@ -10,7 +10,7 @@ import { isMobileDevice, isTouchDevice, shouldReduceMotion } from '../utils/devi
 const FloatingElement = ({ children, delay = 0, duration = 3 }) => {
     const reduceMotion = shouldReduceMotion();
     const isMobile = useMemo(() => isMobileDevice(), []);
-    
+
     if (reduceMotion) {
         return <div className="inline-block">{children}</div>;
     }
@@ -349,13 +349,18 @@ const HeroNew = () => {
                         className="pt-16 space-y-4"
                     >
                         <p className="text-sm uppercase tracking-widest text-gray-500 font-semibold">
-                            Trusted by Industry Leaders
+                            Trusted by brands
                         </p>
                         <div className="relative overflow-hidden max-w-4xl mx-auto">
                             <div className="flex gap-12 animate-marquee whitespace-nowrap">
                                 {[
-                                    'TechCorp', 'DesignHub', 'StartupX', 'InnovateLab', 'BrandForge',
-                                    'TechCorp', 'DesignHub', 'StartupX', 'InnovateLab', 'BrandForge'
+                                    'SURYAS SOLAR', 'GOKUL OILS', 'HARRY DESIGNS',
+                                    'SURYAS SOLAR', 'GOKUL OILS', 'HARRY DESIGNS',
+                                    'SURYAS SOLAR', 'GOKUL OILS', 'HARRY DESIGNS',
+                                    // Duplicate for seamless loop
+                                    'SURYAS SOLAR', 'GOKUL OILS', 'HARRY DESIGNS',
+                                    'SURYAS SOLAR', 'GOKUL OILS', 'HARRY DESIGNS',
+                                    'SURYAS SOLAR', 'GOKUL OILS', 'HARRY DESIGNS'
                                 ].map((brand, i) => (
                                     <span
                                         key={i}
@@ -371,29 +376,6 @@ const HeroNew = () => {
                 </div>
             </div>
 
-            {/* Scroll Indicator */}
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1.5 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20"
-            >
-                <motion.div
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                    className="flex flex-col items-center gap-2 cursor-pointer"
-                    onClick={() => document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                    <span className="text-xs uppercase tracking-widest text-gray-500">Scroll to Explore</span>
-                    <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-                        <motion.div
-                            animate={{ y: [0, 12, 0] }}
-                            transition={{ duration: 1.5, repeat: Infinity }}
-                            className="w-1 h-2 bg-accent rounded-full"
-                        />
-                    </div>
-                </motion.div>
-            </motion.div>
 
         </section>
     );

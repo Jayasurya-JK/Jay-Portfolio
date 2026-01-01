@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Monitor, Smartphone, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Monitor, Smartphone, ChevronLeft, ChevronRight, ExternalLink, Target, Zap, TrendingUp } from 'lucide-react';
 import { projects } from '../data/projects';
 import Reveal from './Reveal';
 
@@ -10,12 +10,13 @@ const ProjectDetails = () => {
     const project = projects.find(p => p.id === id);
     const [viewMode, setViewMode] = useState('desktop'); // 'desktop' or 'mobile'
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [activeTab, setActiveTab] = useState('challenge');
 
     if (!project) {
         return <div className="min-h-screen flex items-center justify-center text-white">Project not found</div>;
     }
 
-    const screenshots = viewMode === 'desktop' ? project.details.desktopScreenshots : project.details.mobileScreenshots;
+    const screenshots = (viewMode === 'desktop' ? project.details?.desktopScreenshots : project.details?.mobileScreenshots) || [];
 
     const nextImage = () => {
         setCurrentImageIndex((prev) => (prev + 1) % screenshots.length);
@@ -26,7 +27,7 @@ const ProjectDetails = () => {
     };
 
     return (
-        <div className="min-h-screen bg-primary pt-20 md:pt-24 pb-12 md:pb-20 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+        <div className="min-h-screen bg-primary pt-4 md:pt-24 pb-12 md:pb-20 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
             <div className="max-w-7xl mx-auto w-full">
                 {/* Header */}
                 <div className="mb-6 md:mb-8">
@@ -91,14 +92,44 @@ const ProjectDetails = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 1.05 }}
                                 transition={{ duration: 0.3 }}
-                                className={`relative shadow-2xl rounded-lg overflow-hidden border border-white/10 ${viewMode === 'mobile' ? 'max-w-[200px] sm:max-w-[250px] md:max-w-[300px]' : 'w-full max-w-5xl'}`}
+                                className={`relative ${viewMode === 'mobile' ? 'max-w-[280px] sm:max-w-[320px] md:max-w-[360px]' : 'w-full max-w-5xl'}`}
                             >
                                 {screenshots.length > 0 ? (
-                                    <img
-                                        src={screenshots[currentImageIndex]}
-                                        alt={`Screenshot ${currentImageIndex + 1}`}
-                                        className="w-full h-auto"
-                                    />
+                                    viewMode === 'desktop' ? (
+                                        // Desktop Browser Frame
+                                        <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                                            {/* Browser Chrome */}
+                                            <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-3 border-b border-gray-700 flex items-center gap-4">
+                                                <div className="flex gap-2">
+                                                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                                </div>
+                                                <div className="flex-1 bg-[#1a1a1a] rounded-full px-4 py-1.5 text-xs text-gray-500 font-mono text-center truncate">
+                                                    {project.domain || "project-demo.com"}
+                                                </div>
+                                            </div>
+                                            {/* Image Content */}
+                                            <div className="bg-gray-900">
+                                                <img
+                                                    src={screenshots[currentImageIndex]}
+                                                    alt={`Desktop Screenshot ${currentImageIndex + 1}`}
+                                                    className="w-full h-auto block"
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        // Mobile Phone Frame
+                                        <div className="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl border-[6px] border-gray-800 mx-auto">
+                                            <div className="bg-black rounded-[2rem] overflow-hidden relative border border-gray-800">
+                                                <img
+                                                    src={screenshots[currentImageIndex]}
+                                                    alt={`Mobile Screenshot ${currentImageIndex + 1}`}
+                                                    className="w-full h-auto block"
+                                                />
+                                            </div>
+                                        </div>
+                                    )
                                 ) : (
                                     <div className="p-12 md:p-20 text-center text-gray-500 text-sm md:text-base">No screenshots available</div>
                                 )}
@@ -139,38 +170,135 @@ const ProjectDetails = () => {
                     </div>
                 </div>
 
-                {/* Deep Dive Content */}
-                <div className="grid md:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
-                    <div className="md:col-span-2 space-y-6 md:space-y-8">
+                {/* Tech Tags and Details Grid */}
+                <div className="space-y-8 md:space-y-12">
+                    {/* Tech Tags */}
+                    <Reveal>
+                        <div className="flex flex-wrap gap-2 justify-center">
+                            {project.tags.map((tag, idx) => (
+                                <span
+                                    key={idx}
+                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl text-sm text-gray-300 font-medium transition-all cursor-default"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </Reveal>
+
+                    {/* Interactive Details Tabs */}
+                    <div className="max-w-4xl mx-auto">
+                        {/* Tab Navigation */}
+                        <div className="flex justify-center gap-8 mb-8">
+                            <button
+                                onClick={() => setActiveTab('challenge')}
+                                className={`flex flex-col items-center gap-2 group transition-all ${activeTab === 'challenge' ? 'scale-110' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
+                            >
+                                <div className={`p-4 rounded-full transition-all ${activeTab === 'challenge' ? 'bg-red-500/20 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-gray-400'}`}>
+                                    <Target size={28} />
+                                </div>
+                                <span className={`text-sm font-medium tracking-wide ${activeTab === 'challenge' ? 'text-red-500' : 'text-gray-500'}`}>CHALLENGE</span>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('solution')}
+                                className={`flex flex-col items-center gap-2 group transition-all ${activeTab === 'solution' ? 'scale-110' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
+                            >
+                                <div className={`p-4 rounded-full transition-all ${activeTab === 'solution' ? 'bg-blue-500/20 text-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 'bg-white/5 text-gray-400'}`}>
+                                    <Zap size={28} />
+                                </div>
+                                <span className={`text-sm font-medium tracking-wide ${activeTab === 'solution' ? 'text-blue-500' : 'text-gray-500'}`}>SOLUTION</span>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('impact')}
+                                className={`flex flex-col items-center gap-2 group transition-all ${activeTab === 'impact' ? 'scale-110' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
+                            >
+                                <div className={`p-4 rounded-full transition-all ${activeTab === 'impact' ? 'bg-green-500/20 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.3)]' : 'bg-white/5 text-gray-400'}`}>
+                                    <TrendingUp size={28} />
+                                </div>
+                                <span className={`text-sm font-medium tracking-wide ${activeTab === 'impact' ? 'text-green-500' : 'text-gray-500'}`}>IMPACT</span>
+                            </button>
+                        </div>
+
+                        {/* Tab Content */}
                         <Reveal>
-                            <section>
-                                <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">The Challenge</h2>
-                                <p className="text-gray-300 leading-relaxed text-base md:text-lg">
-                                    {project.details.challenge}
-                                </p>
-                            </section>
-                        </Reveal>
-                        <Reveal delay={0.2}>
-                            <section>
-                                <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">The Solution</h2>
-                                <p className="text-gray-300 leading-relaxed text-base md:text-lg">
-                                    {project.details.solution}
-                                </p>
-                            </section>
+                            <AnimatePresence mode="wait">
+                                {activeTab === 'challenge' && (
+                                    <motion.div
+                                        key="challenge"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 20 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="bg-red-500/5 p-8 md:p-10 rounded-3xl border border-red-500/20 text-left relative overflow-hidden"
+                                    >
+                                        <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                                            <Target size={200} className="text-red-500" />
+                                        </div>
+                                        <Target className="w-12 h-12 text-red-500 mb-6" />
+                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-4 uppercase tracking-wider">The Challenge</h3>
+                                        <p className="text-gray-200 text-lg leading-relaxed relative z-10">
+                                            {project.details?.challenge || "Addressing complex user needs through intuitive design."}
+                                        </p>
+                                    </motion.div>
+                                )}
+
+                                {activeTab === 'solution' && (
+                                    <motion.div
+                                        key="solution"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 20 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="bg-blue-500/5 p-8 md:p-10 rounded-3xl border border-blue-500/20 text-left relative overflow-hidden"
+                                    >
+                                        <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                                            <Zap size={200} className="text-blue-500" />
+                                        </div>
+                                        <Zap className="w-12 h-12 text-blue-500 mb-6" />
+                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-4 uppercase tracking-wider">The Solution</h3>
+                                        <p className="text-gray-200 text-lg leading-relaxed relative z-10">
+                                            {project.details?.solution || "Implementing robust, scalable technologies."}
+                                        </p>
+                                    </motion.div>
+                                )}
+
+                                {activeTab === 'impact' && (
+                                    <motion.div
+                                        key="impact"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 20 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="bg-green-500/5 p-8 md:p-10 rounded-3xl border border-green-500/20 text-left relative overflow-hidden"
+                                    >
+                                        <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                                            <TrendingUp size={200} className="text-green-500" />
+                                        </div>
+                                        <TrendingUp className="w-12 h-12 text-green-500 mb-6" />
+                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-4 uppercase tracking-wider">The Impact</h3>
+                                        <p className="text-gray-200 text-lg leading-relaxed relative z-10">
+                                            {project.details?.impact || "Optimizing performance and driving conversion."}
+                                        </p>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </Reveal>
                     </div>
 
+                    {/* Key Features List */}
                     <Reveal delay={0.4}>
-                        <div className="bg-secondary/20 p-5 md:p-6 rounded-xl md:rounded-2xl border border-white/5 h-fit">
-                            <h3 className="text-lg md:text-xl font-bold text-white mb-4 md:mb-6">Key Features</h3>
-                            <ul className="space-y-4 md:space-y-6">
-                                {project.details.features.map((feature, idx) => (
-                                    <li key={idx}>
-                                        <h4 className="text-accent font-medium mb-1 text-sm md:text-base">{feature.title}</h4>
-                                        <p className="text-xs md:text-sm text-gray-400">{feature.desc}</p>
-                                    </li>
+                        <div className="bg-secondary/20 p-6 md:p-8 rounded-2xl border border-white/5">
+                            <h3 className="text-xl md:text-2xl font-bold text-white mb-6">Key Features</h3>
+                            <div className="grid sm:grid-cols-2 gap-6">
+                                {project.details?.features?.map((feature, idx) => (
+                                    <div key={idx} className="flex flex-col gap-2">
+                                        <h4 className="text-accent font-medium text-lg">{feature.title}</h4>
+                                        <p className="text-sm text-gray-400 leading-relaxed">{feature.desc}</p>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     </Reveal>
                 </div>

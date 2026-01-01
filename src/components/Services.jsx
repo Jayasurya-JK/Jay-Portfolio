@@ -1,68 +1,113 @@
-import React from 'react';
-import { Globe, Image, Server, Check, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { Globe, Image, Server, Check, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Reveal from './Reveal';
 import { shouldReduceMotion } from '../utils/deviceDetection';
 
 const Services = () => {
     const reduceMotion = shouldReduceMotion();
-    
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [direction, setDirection] = useState(1);
+    const [isPaused, setIsPaused] = useState(false);
+
     const services = [
         {
             icon: <Globe size={32} className="text-accent" />,
             title: "Business Websites & Landing Pages",
-            description: "Modern, mobile-friendly websites for real estate promoters, clinics, gyms, CAs, lawyers, influencers, and other small businesses.",
+            description: "High-converting landing pages, e-commerce stores, and portfolios designed for lead generation. Fully optimized for SEO, mobile capability, and premium performance.",
             points: [
-                "SEO-ready structure and clean content",
-                "Fast loading and mobile responsive",
-                "WhatsApp and lead capture forms",
-                "Google Search Console and indexing setup"
+                "Landing Pages, Portfolios & Funnels",
+                "E-commerce stores & Lead Generation",
+                "SEO-friendly & Mobile-optimized",
+                "GSC Indexing & Analytics Setup"
             ]
         },
         {
             icon: <Image size={32} className="text-accent" />,
-            title: "Product Catalogs & Instagram Creatives",
-            description: "High-quality digital catalogs and social media creatives that make your brand and products look professional.",
+            title: "Product Catalogs, Logos & Socials",
+            description: "Market-ready product catalogs that sell, high-converting Instagram creatives, and professional logo designs. Assets that work for your business.",
             points: [
-                "Product catalog design (like Gokul Oils)",
-                "Instagram post & story designs",
-                "Clean layout and premium feel",
-                "Ready for print or digital use"
+                "Market-ready Catalogues (Print/Digital)",
+                "High-converting Instagram Posts",
+                "Logo Design & Brand Identity",
+                "Premium Layouts that Sell"
             ]
         },
         {
             icon: <Server size={32} className="text-accent" />,
-            title: "Hosting, SEO & Ongoing Support",
-            description: "I can host, monitor, and maintain your website, so you don’t need to worry about the technical side.",
+            title: "Premium Hosting & Growth Support",
+            description: "Complete technical management including lightning-fast hosting, 24/7 security monitoring, and strategic SEO updates to keep you growing.",
             points: [
-                "Premium hosting (starting from ₹99/month)",
-                "Basic SEO and on-page improvements",
-                "Google Business Profile support",
-                "Small monthly updates and tweaks"
+                "High-Speed Secure Hosting",
+                "Technical SEO & Performance Tuning",
+                "Google Business Growth Strategy",
+                "Priority Support & Maintenance"
             ]
         }
     ];
+
+    // Auto-play functionality
+    useEffect(() => {
+        if (isPaused || reduceMotion) return;
+
+        const interval = setInterval(() => {
+            setDirection(1);
+            setCurrentIndex((prev) => (prev + 1) % services.length);
+        }, 4000); // Change card every 4 seconds
+
+        return () => clearInterval(interval);
+    }, [isPaused, services.length, reduceMotion]);
+
+    const navigate = (newDirection) => {
+        setDirection(newDirection);
+        if (newDirection === 1) {
+            setCurrentIndex((prev) => (prev + 1) % services.length);
+        } else {
+            setCurrentIndex((prev) => (prev - 1 + services.length) % services.length);
+        }
+    };
+
+    const slideVariants = {
+        enter: (direction) => ({
+            x: direction > 0 ? 300 : -300,
+            opacity: 0,
+            scale: 0.9,
+            rotateY: direction > 0 ? 20 : -20
+        }),
+        center: {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            rotateY: 0
+        },
+        exit: (direction) => ({
+            x: direction > 0 ? -300 : 300,
+            opacity: 0,
+            scale: 0.9,
+            rotateY: direction > 0 ? -20 : 20
+        })
+    };
 
     return (
         <section id="services" className="py-12 md:py-20 bg-secondary/30 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Reveal>
-                    <div className="mb-8 md:mb-16 flex justify-between items-end">
-                        <div className="text-left">
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">What I can do for you</h2>
-                            <p className="text-gray-400 max-w-2xl">
-                                Simple, focused services that give your business a real online presence.
-                            </p>
+                    <div className="mb-2 md:mb-16 text-center md:text-left">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 border border-accent/20 rounded-full mb-4 mx-auto md:mx-0">
+                            <Sparkles className="w-4 h-4 text-accent" />
+                            <span className="text-accent text-xs font-bold uppercase tracking-widest">My Expertise</span>
                         </div>
-                        {/* Mobile Swipe Hint */}
-                        <div className="md:hidden text-accent text-sm font-medium animate-pulse flex items-center gap-2 mb-1">
-                            Swipe <ArrowRight size={16} />
-                        </div>
+                        <h2 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight">
+                            What I can <span className="text-accent">do for you</span>
+                        </h2>
+                        <p className="text-gray-400 max-w-2xl mx-auto md:mx-0 text-lg leading-relaxed">
+                            Simple, focused services that give your business a <span className="text-white font-medium">real online presence</span>.
+                        </p>
                     </div>
                 </Reveal>
 
-                {/* Mobile: Horizontal Scroll | Desktop: Grid */}
-                <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-8 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 scrollbar-hide">
+                {/* Desktop: Grid */}
+                <div className="hidden md:grid md:grid-cols-3 gap-8">
                     {services.map((service, index) => (
                         <motion.div
                             key={index}
@@ -70,7 +115,7 @@ const Services = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
                             transition={{ duration: reduceMotion ? 0.4 : 0.6, delay: index * 0.1, ease: "easeOut" }}
-                            className="min-w-[85vw] md:min-w-0 snap-center bg-secondary border border-white/5 rounded-2xl p-6 md:p-8 hover:border-accent/30 transition-all hover:-translate-y-1 duration-300 flex flex-col h-full"
+                            className="bg-secondary border border-white/5 rounded-2xl p-8 hover:border-accent/30 transition-all hover:-translate-y-1 duration-300 flex flex-col h-full"
                         >
                             <div className="bg-primary/50 w-14 h-14 rounded-xl flex items-center justify-center mb-6 border border-white/5">
                                 {service.icon}
@@ -89,6 +134,125 @@ const Services = () => {
                             </ul>
                         </motion.div>
                     ))}
+                </div>
+
+                {/* Mobile: Auto-playing Horizontal Carousel */}
+                <div className="md:hidden">
+                    <div
+                        className="relative perspective-1000"
+                        onMouseEnter={() => setIsPaused(true)}
+                        onMouseLeave={() => setIsPaused(false)}
+                        onTouchStart={() => setIsPaused(true)}
+                        onTouchEnd={() => setIsPaused(false)}
+                    >
+                        {/* Card Container */}
+                        <div className="relative h-[500px] flex items-center justify-center mb-2">
+                            <AnimatePresence initial={false} custom={direction} mode="wait">
+                                <motion.div
+                                    key={currentIndex}
+                                    custom={direction}
+                                    variants={reduceMotion ? {} : slideVariants}
+                                    initial="enter"
+                                    animate="center"
+                                    exit="exit"
+                                    transition={{
+                                        x: { type: "spring", stiffness: 300, damping: 30 },
+                                        opacity: { duration: 0.3 },
+                                        scale: { duration: 0.3 },
+                                        rotateY: { duration: 0.4 }
+                                    }}
+                                    drag="x"
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    dragElastic={1}
+                                    onDragEnd={(e, { offset, velocity }) => {
+                                        const swipe = Math.abs(offset.x) * velocity.x;
+                                        if (swipe < -10000) {
+                                            navigate(1);
+                                        } else if (swipe > 10000) {
+                                            navigate(-1);
+                                        }
+                                    }}
+                                    className="absolute w-full bg-secondary/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl"
+                                >
+                                    {/* Card number badge - Forced Position */}
+                                    <div
+                                        className="absolute w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white flex items-center justify-center font-bold text-sm z-50"
+                                        style={{ top: '24px', right: '24px' }}
+                                    >
+                                        {currentIndex + 1}
+                                    </div>
+                                    <div className="relative z-10">
+                                        {/* Icon */}
+                                        <div className="bg-primary/50 w-16 h-16 rounded-2xl flex items-center justify-center mb-5 border border-white/10">
+                                            {services[currentIndex].icon}
+                                        </div>
+
+
+
+                                        {/* Title */}
+                                        <h3 className="text-xl font-bold text-white mb-3">
+                                            {services[currentIndex].title}
+                                        </h3>
+
+                                        {/* Description */}
+                                        <p className="text-gray-400 mb-5 text-sm leading-relaxed">
+                                            {services[currentIndex].description}
+                                        </p>
+
+                                        {/* Points */}
+                                        <ul className="space-y-3">
+                                            {services[currentIndex].points.map((point, idx) => (
+                                                <motion.li
+                                                    key={idx}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: idx * 0.1 }}
+                                                    className="flex items-start gap-3 text-sm text-gray-300"
+                                                >
+                                                    <Check size={16} className="text-success mt-1 flex-shrink-0" />
+                                                    <span>{point}</span>
+                                                </motion.li>
+                                            ))}
+                                        </ul>
+                                    </div>
+
+
+
+
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+
+
+
+                        {/* Progress Dots */}
+                        <div className="flex justify-center gap-2">
+                            {services.map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => {
+                                        setDirection(index > currentIndex ? 1 : -1);
+                                        setCurrentIndex(index);
+                                    }}
+                                    className={`
+                                        h-2 rounded-full transition-all duration-300
+                                        ${currentIndex === index
+                                            ? 'w-8 bg-accent'
+                                            : 'w-2 bg-white/30 hover:bg-white/50'
+                                        }
+                                    `}
+                                    aria-label={`Go to service ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+
+                        {/* Auto-play indicator */}
+                        {!isPaused && !reduceMotion && (
+                            <p className="text-center text-xs text-gray-500 mt-8">
+                                Swipe to navigate • Auto-playing
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
         </section>

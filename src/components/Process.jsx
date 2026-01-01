@@ -88,7 +88,7 @@ const Process = () => {
     const currentStep = steps[currentStepIndex];
 
     return (
-        <section id="process" className="py-12 md:py-20 bg-primary relative overflow-hidden min-h-0 flex flex-col justify-start">
+        <section id="process" className="pt-12 pb-12 md:pt-20 md:pb-20 bg-primary relative overflow-hidden min-h-0 flex flex-col justify-start">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
 
                 {/* Header */}
@@ -100,7 +100,7 @@ const Process = () => {
                 </Reveal>
 
                 {/* Active Content Display */}
-                <div className="relative h-[280px] sm:h-[260px] md:h-[200px] max-w-2xl mx-auto text-center mb-8 md:mb-12 px-2">
+                <div className="relative h-[240px] sm:h-[220px] md:h-[180px] max-w-2xl mx-auto text-center mb-1 md:mb-4 px-2">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeIndex}
@@ -123,7 +123,7 @@ const Process = () => {
 
                 {/* Rotating Wheel Container */}
                 <motion.div
-                    className="relative w-full h-[200px] sm:h-[220px] md:h-[360px] flex justify-center mt-8 sm:mt-12 md:mt-16 overflow-visible touch-pan-y"
+                    className="relative w-full h-[200px] sm:h-[220px] md:h-[360px] flex justify-center mt-1 sm:mt-4 md:mt-8 overflow-visible touch-pan-y"
                     onMouseEnter={() => !isMobile && setIsAutoPlaying(false)}
                     onMouseLeave={() => !isMobile && setIsAutoPlaying(true)}
                     onPanEnd={handlePanEnd}

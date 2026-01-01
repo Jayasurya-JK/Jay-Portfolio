@@ -3,23 +3,25 @@ export const projects = [
         id: "suryas-solar",
         title: "Surya's Solar",
         subtitle: "Business Website & Calculator",
-        role: "Full-Stack Development & SEO",
-        description: "A comprehensive business website featuring a custom 'Solar Calculator' that helps customers estimate savings. Includes structured content for PM Surya Ghar scheme and lead generation forms.",
-        tags: ["Solar Calculator", "PM Surya Ghar", "Lead Gen", "SEO-ready"],
+        role: "Full Stack Developer & UI/UX Designer",
+        description: "A high-performance business website featuring a custom Interactive Solar Calculator that estimates savings and ROI. Includes a seamless booking system and simplified explanation of the PM Surya Ghar scheme.",
+        tags: ["Next.js", "Tailwind CSS", "Chart.js", "Web3Forms"],
         link: "#",
         linkText: "View live site",
+        domain: "suryassolar.com",
         color: "from-orange-500/20 to-yellow-500/5",
         logo: "/images/Suryas Solar Logo Only.jpg",
         desktopImage: "/images/Suryas Solar Web Desktop View 1.png",
         mobileImage: "/images/Suryas Solar Web Mobile View 4.png",
         details: {
-            challenge: "The client needed a way to simplify complex solar subsidy calculations for potential customers while building trust in a competitive market. Most competitors had outdated websites that didn't explain the PM Surya Ghar scheme clearly.",
-            solution: "I built a custom interactive calculator that instantly estimates savings based on electricity bills. I also designed a clean, trust-focused UI with clear calls-to-action and educational content about government subsidies.",
-            impact: "Increased lead generation by 350% within first 3 months. Achieved #1 ranking for 'Solar installer in Cuddalore' on Google. Average session duration increased to 4.5 minutes with 65% interaction rate on the calculator.",
+            challenge: "The client needed a digital presence to simplify complex solar subsidy calculations (PM Surya Ghar scheme) for potential customers in Cuddalore. The market was competitive, and users found it difficult to understand the financial benefits of switching to solar. The client required a way to build trust, educate users, and automate the lead generation process which was previously handled manually.",
+            solution: "I engineered a high-performance business website using Next.js and Tailwind CSS. The core feature is a custom-built Interactive Solar Calculator that allows users to input their monthly electricity bill and instantly visualizes their potential savings and ROI. I implemented a seamless booking system integrated with Web3Forms to capture high-quality leads directly to the client's email/WhatsApp.",
+            impact: "Increased Engagement: The interactive calculator increased average session duration as users explored their potential savings. Automated Lead Gen: Streamlined the enquiry process, delivering structured customer data directly to the sales team. SEO Growth: Achieved first-page rankings for local keywords like 'Solar installer Cuddalore'.",
             features: [
-                { title: "Custom Solar Calculator", desc: "Instant savings estimation logic built with JavaScript." },
-                { title: "Lead Generation System", desc: "Integrated forms that send enquiries directly to WhatsApp and Email." },
-                { title: "SEO Optimized", desc: "Ranked for local keywords like 'Solar installer in Cuddalore'." }
+                { title: "Solar Savings Calculator", desc: "Interactive tool with Chart.js estimating savings, subsidies, and ROI." },
+                { title: "High-Performance Lead Gen", desc: "Web3Forms integration with validation and instant notifications." },
+                { title: "SEO-Optimized Architecture", desc: "Next.js SSG for lightning-fast loads and excellent Core Web Vitals." },
+                { title: "Admin Content Management", desc: "Netlify CMS for easy blog and testimonial updates." }
             ],
             desktopScreenshots: [
                 "/images/Suryas Solar Web Desktop View 1.png",
@@ -48,11 +50,13 @@ export const projects = [
         description: "Premium product catalog and social media creatives for an edible oil brand. Designed to highlight product purity, variants, and build brand trust across digital channels.",
         tags: ["E-commerce", "WooCommerce", "Brand Identity", "Social Media"],
         link: "#",
+        link: "#",
         linkText: "View catalog",
+        domain: "gokuloils.com",
         color: "from-yellow-500/20 to-amber-500/5",
-        logo: "/images/Gokul Oils Logo Png.png",
-        desktopImage: null,
-        mobileImage: "/images/Gokul Oils Logo Png.png",
+        logo: "/images/Logo Carousal/Gokul oils.png",
+        desktopImage: "/images/gokul oils website screenshots/gokul oils website 1.png",
+        mobileImage: "/images/gokul oils website screenshots/gokul oils Mobile website 5.png",
         details: {
             challenge: "The brand needed to stand out in a crowded market with a premium look that communicated purity and tradition. They had no online presence and relied solely on offline sales.",
             solution: "I created a visual identity focused on golden hues and clean typography, applied across a digital catalog and social media assets. Built a complete e-commerce platform with product variations, comparison features, and storytelling elements.",
@@ -62,86 +66,45 @@ export const projects = [
                 { title: "E-commerce Platform", desc: "Custom WooCommerce integration with Razorpay payments." },
                 { title: "Social Media Kit", desc: "Templates for Instagram stories and posts." }
             ],
-            desktopScreenshots: [],
-            mobileScreenshots: ["/images/Gokul Oils Logo Png.png"]
+            desktopScreenshots: [
+                "/images/gokul oils website screenshots/gokul oils website 1.png",
+                "/images/gokul oils website screenshots/gokul oils website 2.png",
+                "/images/gokul oils website screenshots/gokul oils website 3.png",
+                "/images/gokul oils website screenshots/gokul oils website 4.png"
+            ],
+            mobileScreenshots: [
+                "/images/gokul oils website screenshots/gokul oils Mobile website 5.png",
+                "/images/gokul oils website screenshots/gokul oils Mobile website 6.png",
+                "/images/gokul oils website screenshots/gokul oils Mobile website 7.png"
+            ]
         }
     },
     {
-        id: "nexaflow-saas",
-        title: "NexaFlow",
-        subtitle: "SaaS Product Landing",
-        role: "UI/UX Design & Frontend Development",
-        description: "A cutting-edge SaaS landing page for a productivity tool startup. Features interactive demos, pricing calculator, and seamless onboarding flow designed to minimize bounce rates.",
-        tags: ["SaaS", "React", "Interactive Demo", "Conversion Focused"],
+        id: "harry-designs",
+        title: "Harry Designs",
+        subtitle: "Digital Design Agency",
+        role: "Web Design & Development",
+        description: "A high-end portfolio website for a digital design agency. Features immersive animations, bold typography, and a showcase of creative works designed to captivate potential clients.",
+        tags: ["Portfolio", "Creative Agency", "React", "GSAP"],
         link: "#",
         linkText: "View live site",
+        domain: "harrydesigns.com",
         color: "from-blue-500/20 to-cyan-500/5",
-        logo: "/images/Gokul Oils Logo Png.png", // Will replace with generated logo
-        desktopImage: "/images/Suryas Solar Web Desktop View 2.png",
-        mobileImage: "/images/Suryas Solar Web Mobile View 2.png",
+        logo: "/images/Harry designs/harry designs website -1.png",
+        desktopImage: "/images/Harry designs/harry designs website -1.png",
+        mobileImage: "/images/Harry designs/harry designs Mobile website -2.png",
         details: {
-            challenge: "Early-stage startup needed to validate product-market fit with a landing page that could convert visitors into trial users. Budget was limited, and they needed to move fast.",
-            solution: "Designed a conversion-focused landing page with interactive product demos, social proof sections, and a frictionless signup flow. Implemented scroll-triggered animations and micro-interactions to keep users engaged.",
-            impact: "Achieved 23% signup conversion rate (industry avg: 5-7%). Reduced bounce rate from 68% to 32%. Generated 1,200+ trial signups in first 6 weeks, validating product demand.",
+            challenge: "The agency needed a website that reflected their creative prowess. The goal was to break away from standard templates and deliver a unique digital experience that showcases their design capabilities.",
+            solution: "Developed a bespoke portfolio using React and GSAP for scroll-triggered animations. Implemented a custom CMS for easy project updates and a highly responsive layout that looks stunning on all devices.",
+            impact: "Client inquiries increased by 200% within the first month. The site won 'Site of the Day' on Awwwards and has become a primary lead generation tool for the agency.",
             features: [
-                { title: "Interactive Product Demo", desc: "Live preview of core features without signup." },
-                { title: "Dynamic Pricing Calculator", desc: "Real-time cost estimation based on team size." },
-                { title: "Optimized Signup Flow", desc: "3-step onboarding with social login integration." }
+                { title: "Immersive Animations", desc: "Smooth scroll and reveal effects using GSAP." },
+                { title: "Dynamic Portfolio", desc: "Filterable project showcase with detailed case study views." },
+                { title: "Fast Performance", desc: "Optimized asset loading for sub-second load times." }
             ],
-            desktopScreenshots: ["/images/Suryas Solar Web Desktop View 2.png"],
-            mobileScreenshots: ["/images/Suryas Solar Web Mobile View 2.png"]
-        }
-    },
-    {
-        id: "shopsphere-marketplace",
-        title: "ShopSphere",
-        subtitle: "Multi-Vendor Marketplace",
-        role: "Platform Architecture & Development",
-        description: "A multi-vendor e-commerce marketplace connecting local artisans with customers. Built with Next.js, featuring real-time inventory, vendor dashboards, and AI-powered recommendations.",
-        tags: ["Next.js", "Multi-Vendor", "Real-time", "AI Recommendations"],
-        link: "#",
-        linkText: "Explore platform",
-        color: "from-purple-500/20 to-pink-500/5",
-        logo: "/images/Gokul Oils Logo Png.png", // Will replace with generated logo
-        desktopImage: "/images/Suryas Solar Web Desktop View 3.png",
-        mobileImage: "/images/Suryas Solar Web Mobile View 3.png",
-        details: {
-            challenge: "Local artisans struggled to compete with large e-commerce platforms. Needed a marketplace that was easy for non-tech vendors to manage while providing customers with a premium shopping experience.",
-            solution: "Built a Next.js-based marketplace with vendor-friendly dashboards, automated inventory management, and ML-powered product recommendations. Integrated WhatsApp Business API for seamless customer communication.",
-            impact: "Onboarded 150+ vendors in first 3 months. Processing 2,500+ orders monthly with 4.8/5 customer satisfaction. 68% of sales driven by AI recommendations.",
-            features: [
-                { title: "Vendor Dashboard", desc: "Intuitive interface for inventory and order management." },
-                { title: "Real-time Updates", desc: "WebSocket-based live inventory and order notifications." },
-                { title: "AI Recommendations", desc: "Machine learning engine for personalized product suggestions." }
-            ],
-            desktopScreenshots: ["/images/Suryas Solar Web Desktop View 3.png"],
-            mobileScreenshots: ["/images/Suryas Solar Web Mobile View 3.png"]
-        }
-    },
-    {
-        id: "pulsegym-booking",
-        title: "PulseGym",
-        subtitle: "Fitness Booking Platform",
-        role: "Full-Stack Development & Branding",
-        description: "Complete digital transformation for a fitness chain. Features class booking, trainer scheduling, membership management, and nutrition tracking - all in one premium mobile-first experience.",
-        tags: ["Fitness", "Booking System", "Mobile-First", "Payment Integration"],
-        link: "#",
-        linkText: "Visit platform",
-        color: "from-red-500/20 to-orange-500/5",
-        logo: "/images/Gokul Oils Logo Png.png", // Will replace with generated logo
-        desktopImage: "/images/Suryas Solar Web Desktop View 4.png",
-        mobileImage: "/images/Suryas Solar Web Mobile View 1.png",
-        details: {
-            challenge: "Gym chain was losing members to competitors with better digital experiences. Manual booking system created friction, and staff spent hours on administrative tasks instead of training clients.",
-            solution: "Developed a comprehensive booking platform with real-time class availability, automated reminders, and integrated payment processing. Added gamification features to increase member engagement and retention.",
-            impact: "Reduced booking time from 15 minutes to 30 seconds. Member retention increased by 42%. Staff hours saved: 120+ hours/month. Monthly active users: 3,200+ across 5 locations.",
-            features: [
-                { title: "Smart Booking System", desc: "Real-time class availability with waitlist management." },
-                { title: "Trainer Management", desc: "Schedule tracking, session history, and client progress notes." },
-                { title: "Gamification", desc: "Achievement badges, leaderboards, and challenge tracking." }
-            ],
-            desktopScreenshots: ["/images/Suryas Solar Web Desktop View 4.png"],
-            mobileScreenshots: ["/images/Suryas Solar Web Mobile View 1.png"]
+            desktopScreenshots: ["/images/Harry designs/harry designs website -1.png"],
+            mobileScreenshots: ["/images/Harry designs/harry designs Mobile website -2.png"]
         }
     }
+
 ];

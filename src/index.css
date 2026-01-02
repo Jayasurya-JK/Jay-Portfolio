@@ -113,9 +113,8 @@
 
 /* Add spring-like easing for smooth animations */
 @media (max-width: 768px) {
-  motion-div,
-  [style*="scale"],
-  [style*="opacity"] {
+  div[style*="scale"],
+  div[style*="opacity"] {
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }

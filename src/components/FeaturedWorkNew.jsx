@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ExternalLink, Sparkles } from 'lucide-react';
 import { projects } from '../data/projects';
@@ -22,8 +22,13 @@ const ProjectShowcase = ({ project, index }) => {
         offset: ["start end", "start start"]
     });
 
-    const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 0.8, 1]);
+    // Always call hooks, but use static values on mobile for performance
+    const scaleTransform = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+    const opacityTransform = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 0.8, 1]);
+    
+    // Disable scroll-linked transforms on mobile for performance
+    const scale = isMobile || reduceMotion ? 1 : scaleTransform;
+    const opacity = isMobile || reduceMotion ? 1 : opacityTransform;
 
 
 
@@ -73,15 +78,15 @@ const ProjectShowcase = ({ project, index }) => {
         <motion.div
             ref={containerRef}
             style={{
-                scale: reduceMotion ? 1 : scale,
-                opacity: reduceMotion ? 1 : opacity
+                scale: reduceMotion || isMobile ? 1 : scale,
+                opacity: reduceMotion || isMobile ? 1 : opacity
             }}
-            className="relative md:sticky md:top-0 min-h-screen md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8"
+            className="relative md:sticky md:top-0 md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8"
             onMouseEnter={() => !isMobile && setIsHovered(true)}
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
-            {/* Ambient Background Glow */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10 blur-3xl pointer-events-none`} style={{ transform: 'translateZ(0)' }}></div>
+            {/* Ambient Background Glow - Static on mobile for performance */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${project.color} ${isMobile ? 'opacity-5' : 'opacity-10'} blur-3xl pointer-events-none`} style={{ transform: 'translateZ(0)' }}></div>
 
 
 

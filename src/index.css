@@ -75,3 +75,18 @@
     display: none;
   }
 }
+
+/* Mobile-specific performance optimizations */
+@media (max-width: 768px) {
+  /* Optimize scrolling container for touch devices */
+  #work {
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+  }
+  
+  /* Optimize transforms for mobile */
+  .perspective-1000 {
+    perspective: none;
+    transform: none;
+  }
+}

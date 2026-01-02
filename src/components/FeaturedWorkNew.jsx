@@ -102,7 +102,7 @@ const ProjectShowcase = ({ project, index }) => {
                 opacity: opacity,
                 willChange: isMobile ? 'transform, opacity' : 'auto'
             }}
-            className={`relative sticky top-0 min-h-screen md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8 ${isMobile && isInView ? 'mobile-in-view' : ''}`}
+            className={`relative sticky top-0 min-h-screen md:h-screen flex items-center justify-center py-4 md:py-20 px-4 sm:px-6 md:px-8 ${isMobile && isInView ? 'mobile-in-view' : ''}`}
             onMouseEnter={() => !isMobile && setIsHovered(true)}
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
@@ -117,14 +117,14 @@ const ProjectShowcase = ({ project, index }) => {
 
 
 
-            <div className={`max-w-7xl w-full mx-auto flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 md:gap-12 lg:gap-20 items-center relative z-10`}>
+            <div className={`max-w-7xl w-full mx-auto flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 md:gap-12 lg:gap-28 items-center relative z-10`}>
 
                 {/* Visual Section with 3D Depth */}
                 <motion.div
-                    className="flex-1 relative group"
+                    className="flex-1 relative group z-20"
                 >
                     {/* Floating Index Number */}
-                    <div className="absolute -top-20 left-0 md:-top-32 md:-left-12 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/20 select-none pointer-events-none z-0">
+                    <div className="absolute -top-20 left-0 md:-top-32 md:-left-12 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/20 select-none pointer-events-none z-10">
                         {String(index + 1).padStart(2, '0')}
                     </div>
 

@@ -127,10 +127,21 @@ const Services = () => {
                             </p>
                             <ul className="space-y-3 mt-auto">
                                 {service.points.map((point, idx) => (
-                                    <li key={idx} className="flex items-start gap-3 text-sm text-gray-300">
+                                    <motion.li
+                                        key={idx}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true, margin: "-50px" }}
+                                        transition={{ 
+                                            duration: 0.6,
+                                            delay: index * 0.1 + idx * 0.15,
+                                            ease: [0.25, 0.46, 0.45, 0.94]
+                                        }}
+                                        className="flex items-start gap-3 text-sm text-gray-300"
+                                    >
                                         <Check size={16} className="text-success mt-1 flex-shrink-0" />
                                         <span>{point}</span>
-                                    </li>
+                                    </motion.li>
                                 ))}
                             </ul>
                         </motion.div>
@@ -207,9 +218,9 @@ const Services = () => {
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ 
-                                                        delay: idx * 0.05,  // Reduced from 0.08
-                                                        duration: 0.2,      // Reduced from 0.3
-                                                        ease: "easeOut"
+                                                        delay: idx * 0.15,
+                                                        duration: 0.6,
+                                                        ease: [0.25, 0.46, 0.45, 0.94]
                                                     }}
                                                     className="flex items-start gap-3 text-sm text-gray-300"
                                                 >

@@ -114,7 +114,11 @@ const Services = () => {
                             initial={{ opacity: 0, y: reduceMotion ? 30 : 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: reduceMotion ? 0.4 : 0.6, delay: index * 0.1, ease: "easeOut" }}
+                            transition={{ 
+                                duration: reduceMotion ? 0.4 : 0.5, 
+                                delay: index * 0.1, 
+                                ease: [0.43, 0.13, 0.23, 0.96]
+                            }}
                             className="bg-secondary border border-white/5 rounded-2xl p-8 hover:border-accent/30 transition-all hover:-translate-y-1 duration-300 flex flex-col h-full"
                         >
                             <div className="bg-primary/50 w-14 h-14 rounded-xl flex items-center justify-center mb-6 border border-white/5">
@@ -156,10 +160,10 @@ const Services = () => {
                                     animate="center"
                                     exit="exit"
                                     transition={{
-                                        x: { type: "spring", stiffness: 300, damping: 30 },
-                                        opacity: { duration: 0.3 },
-                                        scale: { duration: 0.3 },
-                                        rotateY: { duration: 0.4 }
+                                        x: { type: "spring", stiffness: 150, damping: 25, mass: 0.8 },
+                                        opacity: { duration: 0.25 },
+                                        scale: { duration: 0.25 },
+                                        rotateY: { duration: 0.3 }
                                     }}
                                     drag="x"
                                     dragConstraints={{ left: 0, right: 0 }}
@@ -206,7 +210,11 @@ const Services = () => {
                                                     key={idx}
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: idx * 0.1 }}
+                                                    transition={{ 
+                                                        delay: idx * 0.08,
+                                                        duration: 0.3,
+                                                        ease: [0.43, 0.13, 0.23, 0.96]
+                                                    }}
                                                     className="flex items-start gap-3 text-sm text-gray-300"
                                                 >
                                                     <Check size={16} className="text-success mt-1 flex-shrink-0" />

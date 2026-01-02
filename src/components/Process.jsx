@@ -107,7 +107,10 @@ const Process = () => {
                             initial={{ opacity: 0, y: 20, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                            transition={{ duration: 0.4 }}
+                            transition={{ 
+                                duration: 0.3,
+                                ease: [0.43, 0.13, 0.23, 0.96]
+                            }}
                             className="absolute inset-0 flex flex-col items-center"
                         >
                             <div className="text-accent font-mono text-base sm:text-lg md:text-xl mb-2">Step {currentStep.number}</div>
@@ -135,7 +138,12 @@ const Process = () => {
                     <motion.div
                         className="absolute top-10 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[600px] md:h-[600px] rounded-full flex items-center justify-center pointer-events-none"
                         animate={{ rotate: -90 - (activeIndex * spacing) }}
-                        transition={reduceMotion ? { duration: 0.3 } : { type: "spring", stiffness: 50, damping: 20 }}
+                        transition={reduceMotion ? { duration: 0.3 } : { 
+                            type: "spring", 
+                            stiffness: 150, 
+                            damping: 25,
+                            mass: 0.8
+                        }}
                     >
                         {steps.map((step, index) => {
                             // Calculate effective index to keep icons clustered around the active index
@@ -178,7 +186,12 @@ const Process = () => {
                                             //             = -90 + (effectiveIndex - activeIndex) * spacing
                                             // So we rotate by NEGATIVE of that.
                                             animate={{ rotate: -(-90 + (effectiveIndex - activeIndex) * spacing) }}
-                                            transition={reduceMotion ? { duration: 0.3 } : { type: "spring", stiffness: 50, damping: 20 }}
+                                            transition={reduceMotion ? { duration: 0.3 } : { 
+                                                type: "spring", 
+                                                stiffness: 150, 
+                                                damping: 25,
+                                                mass: 0.8
+                                            }}
                                         >
                                             {React.cloneElement(step.icon, { size: isActive ? 24 : 20, className: 'sm:w-5 sm:h-5 md:w-6 md:h-6' })}
                                         </motion.div>

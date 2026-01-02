@@ -41,7 +41,7 @@ const ProjectShowcase = ({ project, index }) => {
                         trigger: containerRef.current,
                         start: "top bottom",
                         end: "bottom top",
-                        scrub: 1
+                        scrub: 0.5
                     }
                 });
             }
@@ -59,8 +59,8 @@ const ProjectShowcase = ({ project, index }) => {
                 y: isMobile ? 30 : 60,
                 opacity: 0,
                 duration: isMobile ? 0.5 : 0.8,
-                stagger: isMobile ? 0.08 : 0.15,
-                ease: "power3.out"
+                stagger: isMobile ? 0.08 : 0.12,
+                ease: "power2.out"
             });
         }, containerRef);
 
@@ -81,7 +81,7 @@ const ProjectShowcase = ({ project, index }) => {
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
             {/* Ambient Background Glow */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10 blur-3xl`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-10 blur-3xl pointer-events-none`} style={{ transform: 'translateZ(0)' }}></div>
 
 
 
@@ -100,15 +100,18 @@ const ProjectShowcase = ({ project, index }) => {
                     {/* Main Visual Container */}
                     <div className="relative">
                         {/* Glow Effect */}
-                        <div className={`absolute -inset-4 bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-700 rounded-3xl`}></div>
+                        <div className={`absolute -inset-4 bg-gradient-to-r ${project.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-700 rounded-3xl pointer-events-none`} style={{ transform: 'translateZ(0)' }}></div>
 
                         {/* Device Mockup Container */}
-                        <div className="relative" ref={imageRef}>
+                        <div className="relative" ref={imageRef} style={{ transform: 'translateZ(0)' }}>
                             {project.desktopImage && (
                                 <motion.div
                                     initial={isMobile ? {} : { rotateY: -15, rotateX: 5 }}
                                     whileHover={isMobile ? {} : { rotateY: 0, rotateX: 0, scale: 1.02 }}
-                                    transition={{ duration: 0.6, ease: "easeOut" }}
+                                    transition={{ 
+                                        duration: 0.5, 
+                                        ease: [0.43, 0.13, 0.23, 0.96]
+                                    }}
                                     className="relative perspective-1000"
                                 >
                                     {/* Desktop Browser Chrome */}
@@ -141,7 +144,10 @@ const ProjectShowcase = ({ project, index }) => {
                                 <motion.div
                                     initial={isMobile ? {} : { y: 20 }}
                                     animate={isMobile ? {} : { y: isHovered ? 0 : 20 }}
-                                    transition={{ duration: 0.6 }}
+                                    transition={{ 
+                                        duration: 0.5,
+                                        ease: [0.43, 0.13, 0.23, 0.96]
+                                    }}
                                     className={`absolute ${project.desktopImage ? '-bottom-6 -right-4 sm:-bottom-10 sm:-right-10 md:-bottom-16 md:-right-20' : 'top-0 left-1/2 -translate-x-1/2'} z-20`}
                                 >
                                     <div className="relative">
@@ -175,7 +181,8 @@ const ProjectShowcase = ({ project, index }) => {
                                     repeat: Infinity,
                                     ease: "linear"
                                 }}
-                                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl"
+                                className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-accent/20 to-transparent rounded-full blur-2xl pointer-events-none"
+                                style={{ transform: 'translateZ(0)' }}
                             ></motion.div>
                         )}
                     </div>
@@ -253,10 +260,10 @@ const FeaturedWorkNew = () => {
                     trigger: '.section-title',
                     start: "top 80%",
                 },
-                y: 100,
+                y: 60,
                 opacity: 0,
-                duration: 1,
-                ease: "power3.out"
+                duration: 0.8,
+                ease: "power2.out"
             });
         }, sectionRef);
 
@@ -266,10 +273,11 @@ const FeaturedWorkNew = () => {
     return (
         <section id="work" ref={sectionRef} className="relative pt-20 pb-10 overflow-hidden bg-gradient-to-b from-primary via-primary to-secondary">
             {/* Animated Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
                 <div className="absolute inset-0" style={{
                     backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-                    backgroundSize: '40px 40px'
+                    backgroundSize: '40px 40px',
+                    transform: 'translateZ(0)'
                 }}></div>
             </div>
 
@@ -279,7 +287,10 @@ const FeaturedWorkNew = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ 
+                        duration: 0.5,
+                        ease: [0.43, 0.13, 0.23, 0.96]
+                    }}
                     className="text-center space-y-3 md:space-y-4"
                 >
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white">

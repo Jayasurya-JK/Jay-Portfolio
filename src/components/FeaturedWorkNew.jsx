@@ -6,6 +6,7 @@ import { projects } from '../data/projects';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { isMobileDevice, shouldReduceMotion } from '../utils/deviceDetection';
+import { useOptimizedScroll } from '../hooks/useOptimizedScroll';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,23 +23,30 @@ const ProjectShowcase = ({ project, index }) => {
         offset: ["start end", "start start"]
     });
 
-    // Always call hooks, but use static values on mobile for performance
+    // Desktop: Use Framer Motion transforms (works well with Lenis)
     const scaleTransform = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
     const opacityTransform = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 0.8, 1]);
-    
-    // Disable scroll-linked transforms on mobile for performance
-    const scale = isMobile || reduceMotion ? 1 : scaleTransform;
-    const opacity = isMobile || reduceMotion ? 1 : opacityTransform;
+
+    // Mobile: Use optimized scroll hook
+    const { scrollProgress: mobileScrollProgress, isInView } = useOptimizedScroll(containerRef);
+
+    // Calculate mobile values from scroll progress
+    const mobileScale = isMobile ? 0.8 + (mobileScrollProgress * 0.2) : 1;
+    const mobileOpacity = isMobile ? 0.5 + (mobileScrollProgress * 0.5) : 1;
+
+    // Final values: desktop uses Framer Motion, mobile uses optimized hook
+    const scale = reduceMotion ? 1 : (isMobile ? mobileScale : scaleTransform);
+    const opacity = reduceMotion ? 1 : (isMobile ? mobileOpacity : opacityTransform);
 
 
 
     useEffect(() => {
-        // Disable heavy GSAP animations on mobile
         if (reduceMotion) return;
 
         const ctx = gsap.context(() => {
-            // Parallax effect for images - desktop only
+            // Parallax effect for images
             if (!isMobile) {
+                // Desktop: Full GSAP parallax with scrub
                 gsap.to(imageRef.current, {
                     yPercent: -20,
                     ease: "none",
@@ -47,6 +55,18 @@ const ProjectShowcase = ({ project, index }) => {
                         start: "top bottom",
                         end: "bottom top",
                         scrub: 0.5
+                    }
+                });
+            } else {
+                // Mobile: Lightweight parallax using translate3d (GPU-accelerated)
+                gsap.to(imageRef.current, {
+                    y: -30,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "bottom top",
+                        scrub: 1, // Slower scrub for mobile (less aggressive)
                     }
                 });
             }
@@ -78,15 +98,22 @@ const ProjectShowcase = ({ project, index }) => {
         <motion.div
             ref={containerRef}
             style={{
-                scale: reduceMotion || isMobile ? 1 : scale,
-                opacity: reduceMotion || isMobile ? 1 : opacity
+                scale: scale,
+                opacity: opacity,
+                willChange: isMobile ? 'transform, opacity' : 'auto'
             }}
-            className="relative md:sticky md:top-0 md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8"
+            className={`relative sticky top-0 min-h-screen md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8 ${isMobile && isInView ? 'mobile-in-view' : ''}`}
             onMouseEnter={() => !isMobile && setIsHovered(true)}
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
             {/* Ambient Background Glow - Static on mobile for performance */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${project.color} ${isMobile ? 'opacity-5' : 'opacity-10'} blur-3xl pointer-events-none`} style={{ transform: 'translateZ(0)' }}></div>
+            <div 
+                className={`absolute inset-0 bg-gradient-to-br ${project.color} ${isMobile ? 'opacity-5' : 'opacity-10'} blur-3xl pointer-events-none`} 
+                style={{ 
+                    transform: 'translateZ(0)',
+                    willChange: isMobile ? 'auto' : 'opacity'
+                }}
+            ></div>
 
 
 

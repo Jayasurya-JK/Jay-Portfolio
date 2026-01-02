@@ -82,11 +82,40 @@
   #work {
     -webkit-overflow-scrolling: touch;
     transform: translateZ(0);
+    scroll-snap-type: y proximity;
+  }
+  
+  /* Individual project cards - scroll snap for natural feel */
+  #work > div > div {
+    scroll-snap-align: center;
+    scroll-snap-stop: normal;
+  }
+  
+  /* GPU acceleration hints */
+  .mobile-in-view {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   
   /* Optimize transforms for mobile */
   .perspective-1000 {
     perspective: none;
     transform: none;
+  }
+  
+  /* Reduce blur cost on mobile */
+  .blur-3xl {
+    filter: blur(32px);
+    will-change: auto;
+  }
+}
+
+/* Add spring-like easing for smooth animations */
+@media (max-width: 768px) {
+  motion-div,
+  [style*="scale"],
+  [style*="opacity"] {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }

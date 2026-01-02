@@ -120,7 +120,7 @@ const HeroNew = () => {
 
     // Initial animation burst and periodic auto-connections
     useEffect(() => {
-        if (!init || !particlesContainerRef.current) return;
+        if (!init || !particlesContainerRef.current || shouldReduceMotion()) return;
 
         const particlesInstance = particlesContainerRef.current;
 
@@ -290,7 +290,7 @@ const HeroNew = () => {
 
             {/* Particles Background - Enhanced visibility on mobile */}
             {init && (
-                <div ref={particlesContainerRef} className="absolute inset-0 z-0 pointer-events-auto">
+                <div ref={particlesContainerRef} className="absolute inset-0 z-0 pointer-events-none">
                     <Particles
                         id="hero-particles"
                         options={particlesOptions}

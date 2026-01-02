@@ -69,9 +69,9 @@ const Services = () => {
 
     const slideVariants = {
         enter: (direction) => ({
-            x: direction > 0 ? 200 : -200,
+            x: direction > 0 ? 100 : -100,  // Reduced from 200
             opacity: 0,
-            scale: 0.95
+            scale: 0.98  // Less dramatic scale change
         }),
         center: {
             x: 0,
@@ -79,9 +79,9 @@ const Services = () => {
             scale: 1
         },
         exit: (direction) => ({
-            x: direction > 0 ? -200 : 200,
+            x: direction > 0 ? -100 : 100,  // Reduced from 200
             opacity: 0,
-            scale: 0.95
+            scale: 0.98
         })
     };
 
@@ -148,7 +148,7 @@ const Services = () => {
                     >
                         {/* Card Container */}
                         <div className="relative h-[500px] flex items-center justify-center mb-2">
-                            <AnimatePresence initial={false} custom={direction} mode="wait">
+                            <AnimatePresence initial={false} custom={direction} mode="popLayout">
                                 <motion.div
                                     key={currentIndex}
                                     custom={direction}
@@ -157,22 +157,22 @@ const Services = () => {
                                     animate="center"
                                     exit="exit"
                                     transition={{
-                                        x: { type: "spring", stiffness: 200, damping: 30, mass: 0.5 },
-                                        opacity: { duration: 0.3 },
-                                        scale: { duration: 0.3 }
+                                        x: { type: "tween", duration: 0.3, ease: [0.25, 0.1, 0.25, 1] },
+                                        opacity: { duration: 0.2 },
+                                        scale: { duration: 0.2 }
                                     }}
                                     drag="x"
                                     dragConstraints={{ left: 0, right: 0 }}
                                     dragElastic={1}
                                     onDragEnd={(e, { offset, velocity }) => {
                                         const swipe = Math.abs(offset.x) * velocity.x;
-                                        if (swipe < -10000) {
+                                        if (swipe < -5000) {  // Reduced from -10000
                                             navigate(1);
-                                        } else if (swipe > 10000) {
+                                        } else if (swipe > 5000) {  // Reduced from 10000
                                             navigate(-1);
                                         }
                                     }}
-                                    className="absolute w-full bg-secondary/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl"
+                                    className="absolute w-full bg-secondary/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-xl carousel-card-mobile"
                                 >
                                     {/* Card number badge - Forced Position */}
                                     <div
@@ -207,9 +207,9 @@ const Services = () => {
                                                     initial={{ opacity: 0, x: -20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ 
-                                                        delay: idx * 0.08,
-                                                        duration: 0.3,
-                                                        ease: [0.43, 0.13, 0.23, 0.96]
+                                                        delay: idx * 0.05,  // Reduced from 0.08
+                                                        duration: 0.2,      // Reduced from 0.3
+                                                        ease: "easeOut"
                                                     }}
                                                     className="flex items-start gap-3 text-sm text-gray-300"
                                                 >

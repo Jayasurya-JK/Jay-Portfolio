@@ -139,10 +139,9 @@ const Process = () => {
                         className="absolute top-10 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[600px] md:h-[600px] rounded-full flex items-center justify-center pointer-events-none"
                         animate={{ rotate: -90 - (activeIndex * spacing) }}
                         transition={reduceMotion ? { duration: 0.3 } : { 
-                            type: "spring", 
-                            stiffness: 150, 
-                            damping: 25,
-                            mass: 0.8
+                            type: "tween",
+                            duration: 0.3,
+                            ease: [0.25, 0.1, 0.25, 1]
                         }}
                     >
                         {steps.map((step, index) => {
@@ -187,10 +186,9 @@ const Process = () => {
                                             // So we rotate by NEGATIVE of that.
                                             animate={{ rotate: -(-90 + (effectiveIndex - activeIndex) * spacing) }}
                                             transition={reduceMotion ? { duration: 0.3 } : { 
-                                                type: "spring", 
-                                                stiffness: 150, 
-                                                damping: 25,
-                                                mass: 0.8
+                                                type: "tween",
+                                                duration: 0.3,
+                                                ease: [0.25, 0.1, 0.25, 1]
                                             }}
                                         >
                                             {React.cloneElement(step.icon, { size: isActive ? 24 : 20, className: 'sm:w-5 sm:h-5 md:w-6 md:h-6' })}

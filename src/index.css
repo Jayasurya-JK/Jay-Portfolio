@@ -118,3 +118,19 @@
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
+
+/* Carousel performance optimizations for mobile */
+@media (max-width: 768px) {
+  .carousel-card-mobile {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Optimize backdrop blur for carousel */
+  .backdrop-blur-xl {
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+  }
+}

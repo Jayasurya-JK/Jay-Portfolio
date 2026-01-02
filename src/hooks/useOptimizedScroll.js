@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { isMobileDevice } from '../utils/deviceDetection';
 
 export const useOptimizedScroll = (elementRef) => {
@@ -8,29 +8,29 @@ export const useOptimizedScroll = (elementRef) => {
   const rafId = useRef(null);
   const isInViewRef = useRef(false);
   
-  // Update scroll progress in RAF loop
-  const updateScrollProgress = useCallback(() => {
-    if (!isInViewRef.current || !elementRef.current) {
-      return; // Stop RAF loop when not in view
-    }
-    
-    const rect = elementRef.current.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    
-    // Progress: 0 (at bottom) to 1 (at top)
-    const progress = Math.max(
-      0,
-      Math.min(1, (windowHeight - rect.top) / windowHeight)
-    );
-    
-    setScrollProgress(progress);
-    rafId.current = requestAnimationFrame(updateScrollProgress);
-  }, [elementRef]);
-  
   useEffect(() => {
     if (!elementRef.current || !isMobile) return;
     
     const element = elementRef.current;
+    
+    // Update scroll progress in RAF loop
+    const updateScrollProgress = () => {
+      if (!isInViewRef.current || !element) {
+        return; // Stop RAF loop when not in view
+      }
+      
+      const rect = element.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Progress: 0 (at bottom) to 1 (at top)
+      const progress = Math.max(
+        0,
+        Math.min(1, (windowHeight - rect.top) / windowHeight)
+      );
+      
+      setScrollProgress(progress);
+      rafId.current = requestAnimationFrame(updateScrollProgress);
+    };
     
     // IntersectionObserver for visibility detection (efficient)
     const observer = new IntersectionObserver(
@@ -64,7 +64,7 @@ export const useOptimizedScroll = (elementRef) => {
         rafId.current = null;
       }
     };
-  }, [elementRef, isMobile, updateScrollProgress]);
+  }, [elementRef, isMobile]);
   
   return { scrollProgress, isInView };
 };

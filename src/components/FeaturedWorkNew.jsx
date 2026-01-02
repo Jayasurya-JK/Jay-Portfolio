@@ -124,7 +124,7 @@ const ProjectShowcase = ({ project, index }) => {
                     className="flex-1 relative group z-20"
                 >
                     {/* Floating Index Number */}
-                    <div className="absolute -top-20 left-0 md:-top-32 md:-left-12 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/20 select-none pointer-events-none z-10">
+                    <div className="absolute -top-20 left-0 md:-top-16 md:left-0 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/20 select-none pointer-events-none z-10">
                         {String(index + 1).padStart(2, '0')}
                     </div>
 

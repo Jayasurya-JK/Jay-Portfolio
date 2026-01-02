@@ -4,6 +4,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .animate-platinum-flow {
+    animation: platinum 3s linear infinite;
+  }
+}
+
+@keyframes platinum {
+  from {
+    background-position: 0% center;
+  }
+
+  to {
+    background-position: -200% center;
+  }
+}
+
 @layer base {
   html {
     /* scroll-behavior: smooth; - Disabled for Lenis */
@@ -78,32 +94,33 @@
 
 /* Mobile-specific performance optimizations */
 @media (max-width: 768px) {
+
   /* Optimize scrolling container for touch devices */
   #work {
     -webkit-overflow-scrolling: touch;
     transform: translateZ(0);
     scroll-snap-type: y proximity;
   }
-  
+
   /* Individual project cards - scroll snap for natural feel */
-  #work > div > div {
+  #work>div>div {
     scroll-snap-align: center;
     scroll-snap-stop: normal;
   }
-  
+
   /* GPU acceleration hints */
   .mobile-in-view {
     transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
-  
+
   /* Optimize transforms for mobile */
   .perspective-1000 {
     perspective: none;
     transform: none;
   }
-  
+
   /* Reduce blur cost on mobile */
   .blur-3xl {
     filter: blur(32px);
@@ -113,6 +130,7 @@
 
 /* Add spring-like easing for smooth animations */
 @media (max-width: 768px) {
+
   div[style*="scale"],
   div[style*="opacity"] {
     transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
@@ -127,7 +145,7 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
-  
+
   /* Optimize backdrop blur for carousel */
   .backdrop-blur-xl {
     -webkit-backdrop-filter: blur(24px);

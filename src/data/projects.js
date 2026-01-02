@@ -53,7 +53,7 @@ export const projects = [
         linkText: "View catalog",
         domain: "gokuloils.com",
         color: "from-yellow-500/20 to-amber-500/5",
-        logo: "/images/Logo Carousal/Gokul oils.png",
+        logo: "/images/Gokul Oils Logo Png.png",
         desktopImage: "/images/gokul oils website screenshots/gokul oils website 1.png",
         mobileImage: "/images/gokul oils website screenshots/gokul oils Mobile website 5.png",
         details: {

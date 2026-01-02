@@ -93,9 +93,14 @@ const Process = () => {
 
                 {/* Header */}
                 <Reveal>
-                    <div className="text-center mb-8 md:mb-12">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4">How we work together</h2>
-                        <p className="text-sm sm:text-base text-gray-400">Our proven process for delivering results.</p>
+                    <div className="text-center mb-12 md:mb-20">
+                        <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight mb-4">
+                            How we <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-yellow-400">work together</span>
+                        </h2>
+                        <div className="w-24 h-1 bg-gradient-to-r from-accent/50 to-transparent mx-auto rounded-full mb-6"></div>
+                        <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
+                            A transparent, proven workflow designed to deliver results, not just promises.
+                        </p>
                     </div>
                 </Reveal>
 

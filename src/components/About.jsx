@@ -320,15 +320,14 @@ const About = () => {
                                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] bg-accent/5 blur-[80px] md:blur-[100px] rounded-full pointer-events-none -z-10"></div>
 
                                 <h4 className="text-3xl md:text-6xl font-black text-white mb-6 md:mb-8 leading-tight tracking-tight">
-                                    "I don't sell code.<br />
+                                    &ldquo;I don't sell code.<br />
                                     <span className="relative inline-block mt-2">
-                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-yellow-200 to-accent animate-pulse block md:inline">I sell Market Dominance.</span>
+                                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent via-yellow-200 to-accent animate-pulse">I sell Market Dominance.&rdquo;</span>
                                         {/* Underline decoration */}
                                         <svg className="absolute -bottom-1 md:-bottom-2 w-full h-2 md:h-3 text-accent hidden md:block" viewBox="0 0 100 10" preserveAspectRatio="none">
                                             <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" opacity="0.5" />
                                         </svg>
                                     </span>
-                                    "
                                 </h4>
 
                                 <div className="max-w-xl mx-auto flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 text-gray-400 text-base md:text-xl font-medium">

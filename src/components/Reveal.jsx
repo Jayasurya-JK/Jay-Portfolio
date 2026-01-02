@@ -17,9 +17,9 @@ const Reveal = ({ children, width = "100%", delay = 0.25, className = "" }) => {
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 transition={{ 
-                    duration: reduceMotion ? 0.4 : 0.8, 
+                    duration: reduceMotion ? 0.4 : 0.6, 
                     delay, 
-                    ease: [0.21, 0.47, 0.32, 0.98] 
+                    ease: [0.43, 0.13, 0.23, 0.96]
                 }}
             >
                 {children}

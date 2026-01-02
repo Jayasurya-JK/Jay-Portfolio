@@ -42,7 +42,7 @@ const MagneticButton = ({ children, href, className }) => {
     const isTouch = isTouchDevice();
     const isMobile = useMemo(() => isMobileDevice(), []);
 
-    const springConfig = { damping: 15, stiffness: 150 };
+    const springConfig = { damping: 20, stiffness: 120, mass: 0.8 };
     const springX = useSpring(x, springConfig);
     const springY = useSpring(y, springConfig);
 
@@ -98,7 +98,7 @@ const HeroNew = () => {
                 gsap.to(cursorRef.current, {
                     x: e.clientX,
                     y: e.clientY,
-                    duration: 0.6,
+                    duration: 0.5,
                     ease: "power2.out"
                 });
             }
@@ -223,7 +223,7 @@ const HeroNew = () => {
 
             {/* Particles Background - Reduced on mobile for performance */}
             {init && (
-                <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 z-0 pointer-events-none">
                     <Particles
                         id="hero-particles"
                         options={particlesOptions}
@@ -233,9 +233,9 @@ const HeroNew = () => {
             )}
 
             {/* Gradient Orbs - Optimized for mobile */}
-            <div className="absolute top-1/4 -right-10 md:-right-20 w-64 md:w-96 h-64 md:h-96 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-1/4 -left-10 md:-left-20 w-64 md:w-96 h-64 md:h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-500/5 rounded-full blur-3xl"></div>
+            <div className="absolute top-1/4 -right-10 md:-right-20 w-64 md:w-96 h-64 md:h-96 bg-accent/10 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ transform: 'translateZ(0)' }}></div>
+            <div className="absolute bottom-1/4 -left-10 md:-left-20 w-64 md:w-96 h-64 md:h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '1s', transform: 'translateZ(0)' }}></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-blue-500/5 rounded-full blur-3xl pointer-events-none" style={{ transform: 'translate(-50%, -50%) translateZ(0)' }}></div>
 
             {/* Main Content */}
             <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
@@ -245,7 +245,10 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
+                        transition={{ 
+                            duration: 0.5,
+                            ease: [0.43, 0.13, 0.23, 0.96]
+                        }}
                         className="inline-flex w-full max-w-full justify-center px-2"
                     >
                         <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-accent/20 to-accent/5 border border-accent/30 rounded-full backdrop-blur-md">
@@ -258,7 +261,11 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
+                        transition={{ 
+                            duration: 0.6, 
+                            delay: 0.2,
+                            ease: [0.43, 0.13, 0.23, 0.96]
+                        }}
                         className="space-y-4 md:space-y-6 w-full max-w-full overflow-hidden"
                     >
                         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white leading-tight tracking-tight px-2 w-full break-words">
@@ -281,7 +288,11 @@ const HeroNew = () => {
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
+                        transition={{ 
+                            duration: 0.6, 
+                            delay: 0.4,
+                            ease: [0.43, 0.13, 0.23, 0.96]
+                        }}
                         className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-2 w-full"
                     >
                         I transform ideas into stunning, high-performance websites that{' '}
@@ -294,7 +305,11 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
+                        transition={{ 
+                            duration: 0.6, 
+                            delay: 0.6,
+                            ease: [0.43, 0.13, 0.23, 0.96]
+                        }}
                         className="flex flex-wrap items-center justify-center gap-3 md:gap-4 px-2 w-full max-w-full overflow-visible relative z-20"
                     >
                         {[
@@ -315,7 +330,11 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.8 }}
+                        transition={{ 
+                            duration: 0.6, 
+                            delay: 0.8,
+                            ease: [0.43, 0.13, 0.23, 0.96]
+                        }}
                         className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 pt-8 w-full max-w-full px-4 sm:px-0"
                     >
                         <MagneticButton
@@ -345,7 +364,11 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 1 }}
+                        transition={{ 
+                            duration: 0.8, 
+                            delay: 1,
+                            ease: [0.43, 0.13, 0.23, 0.96]
+                        }}
                         className="pt-16 space-y-4"
                     >
                         <p className="text-sm uppercase tracking-widest text-gray-500 font-semibold">

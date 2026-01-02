@@ -12,13 +12,16 @@ const SmoothScroll = () => {
 
         const lenis = new Lenis({
             duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // standard ease
-            direction: 'vertical', // vertical scroll
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // iOS-like ease
+            direction: 'vertical',
             gestureDirection: 'vertical',
             smooth: true,
+            smoothWheel: true,
+            normalizeWheel: true,
             mouseMultiplier: 1,
             smoothTouch: false,
             touchMultiplier: 2,
+            lerp: 0.1, // Smoother interpolation
         });
 
         function raf(time) {

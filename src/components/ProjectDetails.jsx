@@ -11,6 +11,9 @@ const ProjectDetails = () => {
     const [viewMode, setViewMode] = useState('desktop'); // 'desktop' or 'mobile'
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [activeTab, setActiveTab] = useState('challenge');
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
+    const [showSwipeHint, setShowSwipeHint] = useState(true);
 
     if (!project) {
         return <div className="min-h-screen flex items-center justify-center text-white">Project not found</div>;
@@ -20,10 +23,31 @@ const ProjectDetails = () => {
 
     const nextImage = () => {
         setCurrentImageIndex((prev) => (prev + 1) % screenshots.length);
+        setShowSwipeHint(false);
     };
 
     const prevImage = () => {
         setCurrentImageIndex((prev) => (prev - 1 + screenshots.length) % screenshots.length);
+        setShowSwipeHint(false);
+    };
+
+    const handleTouchStart = (e) => {
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStart - touchEnd > 50) {
+            // Swiped left
+            nextImage();
+        }
+        if (touchStart - touchEnd < -50) {
+            // Swiped right
+            prevImage();
+        }
     };
 
     return (
@@ -84,50 +108,107 @@ const ProjectDetails = () => {
                     </div>
 
                     {/* Image Display */}
-                    <div className="relative bg-black/50 p-4 md:p-8 lg:p-12 flex items-center justify-center min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
+                    <div 
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        className="relative bg-black/50 p-2 sm:p-4 md:p-8 lg:p-12 flex items-center justify-center min-h-[400px] sm:min-h-[450px] md:min-h-[550px] lg:min-h-[650px] overflow-hidden"
+                    >
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={viewMode + currentImageIndex}
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 1.05 }}
-                                transition={{ duration: 0.3 }}
+                                initial={{ opacity: 0, scale: 0.92, rotateY: -10 }}
+                                animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                                exit={{ opacity: 0, scale: 1.05, rotateY: 10 }}
+                                transition={{ 
+                                    duration: 0.5, 
+                                    ease: [0.4, 0, 0.2, 1]
+                                }}
                                 className={`relative ${viewMode === 'mobile' ? 'max-w-[280px] sm:max-w-[320px] md:max-w-[360px]' : 'w-full max-w-5xl'}`}
                             >
                                 {screenshots.length > 0 ? (
                                     viewMode === 'desktop' ? (
-                                        // Desktop Browser Frame
-                                        <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                                            {/* Browser Chrome */}
-                                            <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-3 border-b border-gray-700 flex items-center gap-4">
-                                                <div className="flex gap-2">
-                                                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                                                </div>
-                                                <div className="flex-1 bg-[#1a1a1a] rounded-full px-4 py-1.5 text-xs text-gray-500 font-mono text-center truncate">
-                                                    {project.domain || "project-demo.com"}
+                                        // 3D Laptop Mockup
+                                        <div className="relative w-full max-w-[280px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-5xl mx-auto" style={{ perspective: '2000px' }}>
+                                            <div className="relative transition-transform duration-500 ease-out hover:scale-[1.02]" style={{ transformStyle: 'preserve-3d', transform: 'rotateX(-5deg)' }}>
+                                                {/* Laptop Base */}
+                                                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[105%] h-3 bg-gradient-to-b from-gray-800 to-gray-900 rounded-b-xl" style={{ transform: 'translateZ(-10px) rotateX(85deg)' }}></div>
+                                                
+                                                {/* Screen Container */}
+                                                <div className="relative bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-2xl p-3 shadow-2xl border-[3px] border-gray-700">
+                                                    {/* Camera Notch */}
+                                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-4 bg-black rounded-b-lg flex items-center justify-center z-20">
+                                                        <div className="w-2 h-2 bg-gray-700 rounded-full"></div>
+                                                    </div>
+                                                    
+                                                    {/* Screen Bezel */}
+                                                    <div className="relative bg-black rounded-xl overflow-hidden border-4 border-gray-950">
+                                                        {/* Browser Chrome */}
+                                                        <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-3 border-b border-gray-700 flex items-center gap-4">
+                                                            <div className="flex gap-2">
+                                                                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                                                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                                                <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                                            </div>
+                                                            <div className="flex-1 bg-[#1a1a1a] rounded-full px-4 py-1.5 text-xs text-gray-500 font-mono text-center truncate">
+                                                                {project.domain || "project-demo.com"}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        {/* Screen Content with Reflection */}
+                                                        <div className="relative bg-gray-900">
+                                                            <img
+                                                                src={screenshots[currentImageIndex]}
+                                                                alt={`Desktop Screenshot ${currentImageIndex + 1}`}
+                                                                className="w-full h-auto block relative z-0"
+                                                            />
+                                                            {/* Screen Glare Overlay */}
+                                                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none z-10"></div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            {/* Image Content */}
-                                            <div className="bg-gray-900">
-                                                <img
-                                                    src={screenshots[currentImageIndex]}
-                                                    alt={`Desktop Screenshot ${currentImageIndex + 1}`}
-                                                    className="w-full h-auto block"
-                                                />
-                                            </div>
+                                            {/* Floating Shadow */}
+                                            <div className="absolute inset-0 bg-black/40 blur-3xl -z-10 translate-y-8 scale-90"></div>
                                         </div>
                                     ) : (
-                                        // Mobile Phone Frame
-                                        <div className="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl border-[6px] border-gray-800 mx-auto">
-                                            <div className="bg-black rounded-[2rem] overflow-hidden relative border border-gray-800">
-                                                <img
-                                                    src={screenshots[currentImageIndex]}
-                                                    alt={`Mobile Screenshot ${currentImageIndex + 1}`}
-                                                    className="w-full h-auto block"
-                                                />
+                                        // iPhone 15 Pro Mockup
+                                        <div className="relative mx-auto w-[280px] sm:w-[320px] md:w-[360px]">
+                                            {/* Phone Body with gradient */}
+                                            <div className="relative bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-[3rem] p-2 shadow-2xl border-[3px] border-gray-700 transition-transform duration-300 hover:scale-105">
+                                                
+                                                {/* Dynamic Island */}
+                                                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-20 flex items-center justify-center border border-gray-950">
+                                                    <div className="w-3 h-3 bg-purple-500/40 rounded-full animate-pulse"></div>
+                                                </div>
+                                                
+                                                {/* Screen Container */}
+                                                <div className="relative bg-black rounded-[2.5rem] overflow-hidden border-4 border-gray-950">
+                                                    
+                                                    {/* Screen Reflection Overlay */}
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none z-10"></div>
+                                                    
+                                                    {/* Screenshot */}
+                                                    <img
+                                                        src={screenshots[currentImageIndex]}
+                                                        alt={`Mobile Screenshot ${currentImageIndex + 1}`}
+                                                        className="w-full h-auto block relative z-0"
+                                                    />
+                                                    
+                                                    {/* Home Indicator */}
+                                                    <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/30 rounded-full z-10"></div>
+                                                </div>
+                                                
+                                                {/* Side Buttons - Volume */}
+                                                <div className="absolute -left-[3px] top-20 w-[3px] h-12 bg-gray-700 rounded-r-sm"></div>
+                                                <div className="absolute -left-[3px] top-36 w-[3px] h-8 bg-gray-700 rounded-r-sm"></div>
+                                                
+                                                {/* Side Button - Power */}
+                                                <div className="absolute -right-[3px] top-28 w-[3px] h-16 bg-gray-700 rounded-l-sm"></div>
                                             </div>
+                                            
+                                            {/* Floating Shadow */}
+                                            <div className="absolute inset-0 bg-black/30 blur-2xl -z-10 translate-y-8 scale-95"></div>
                                         </div>
                                     )
                                 ) : (
@@ -141,32 +222,54 @@ const ProjectDetails = () => {
                             <>
                                 <button
                                     onClick={prevImage}
-                                    className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 p-2 md:p-3 min-w-[44px] min-h-[44px] bg-black/50 hover:bg-accent text-white hover:text-primary rounded-full backdrop-blur-sm transition-all border border-white/10 flex items-center justify-center"
+                                    className="absolute left-1 sm:left-2 md:left-4 lg:left-8 top-1/2 -translate-y-1/2 p-3 md:p-4 min-w-[48px] min-h-[48px] bg-black/60 hover:bg-accent/90 backdrop-blur-md text-white hover:text-primary rounded-full transition-all duration-300 border border-white/10 hover:border-accent/50 flex items-center justify-center hover:scale-110 active:scale-95 shadow-lg hover:shadow-accent/30 group"
+                                    aria-label="Previous screenshot"
                                 >
-                                    <ChevronLeft size={20} />
+                                    <ChevronLeft size={24} className="transition-transform group-hover:-translate-x-0.5" />
                                 </button>
                                 <button
                                     onClick={nextImage}
-                                    className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 p-2 md:p-3 min-w-[44px] min-h-[44px] bg-black/50 hover:bg-accent text-white hover:text-primary rounded-full backdrop-blur-sm transition-all border border-white/10 flex items-center justify-center"
+                                    className="absolute right-1 sm:right-2 md:right-4 lg:right-8 top-1/2 -translate-y-1/2 p-3 md:p-4 min-w-[48px] min-h-[48px] bg-black/60 hover:bg-accent/90 backdrop-blur-md text-white hover:text-primary rounded-full transition-all duration-300 border border-white/10 hover:border-accent/50 flex items-center justify-center hover:scale-110 active:scale-95 shadow-lg hover:shadow-accent/30 group"
+                                    aria-label="Next screenshot"
                                 >
-                                    <ChevronRight size={20} />
+                                    <ChevronRight size={24} className="transition-transform group-hover:translate-x-0.5" />
                                 </button>
                             </>
                         )}
 
-                        {/* Dots Indicator */}
+                        {/* Dash Indicators */}
                         {screenshots.length > 1 && (
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 md:gap-2">
                                 {screenshots.map((_, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setCurrentImageIndex(idx)}
-                                        className={`rounded-full transition-all min-w-[24px] min-h-[24px] flex items-center justify-center ${idx === currentImageIndex ? 'bg-accent w-6 h-2' : 'bg-white/30 hover:bg-white/50 w-2 h-2'}`}
+                                        className={`rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'bg-accent w-8 md:w-12 h-1 md:h-1.5' : 'bg-white/30 hover:bg-white/50 w-6 md:w-8 h-1 md:h-1.5'}`}
+                                        style={{ minWidth: idx === currentImageIndex ? '32px' : '24px', minHeight: '44px', padding: '21px 0' }}
                                         aria-label={`Go to screenshot ${idx + 1}`}
                                     />
                                 ))}
                             </div>
                         )}
+
+                        {/* Swipe Hint Indicator */}
+                        <AnimatePresence>
+                            {showSwipeHint && screenshots.length > 1 && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    transition={{ delay: 1, duration: 0.5 }}
+                                    className="absolute bottom-20 right-4 md:hidden flex items-center gap-2 text-white/50 text-sm bg-black/30 px-3 py-2 rounded-full backdrop-blur-sm pointer-events-none"
+                                    onAnimationComplete={() => {
+                                        setTimeout(() => setShowSwipeHint(false), 3000);
+                                    }}
+                                >
+                                    <span>Swipe</span>
+                                    <ChevronRight size={16} className="animate-pulse" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
 

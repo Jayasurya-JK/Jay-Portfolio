@@ -69,22 +69,19 @@ const Services = () => {
 
     const slideVariants = {
         enter: (direction) => ({
-            x: direction > 0 ? 300 : -300,
+            x: direction > 0 ? 200 : -200,
             opacity: 0,
-            scale: 0.9,
-            rotateY: direction > 0 ? 20 : -20
+            scale: 0.95
         }),
         center: {
             x: 0,
             opacity: 1,
-            scale: 1,
-            rotateY: 0
+            scale: 1
         },
         exit: (direction) => ({
-            x: direction > 0 ? -300 : 300,
+            x: direction > 0 ? -200 : 200,
             opacity: 0,
-            scale: 0.9,
-            rotateY: direction > 0 ? -20 : 20
+            scale: 0.95
         })
     };
 
@@ -160,10 +157,9 @@ const Services = () => {
                                     animate="center"
                                     exit="exit"
                                     transition={{
-                                        x: { type: "spring", stiffness: 150, damping: 25, mass: 0.8 },
-                                        opacity: { duration: 0.25 },
-                                        scale: { duration: 0.25 },
-                                        rotateY: { duration: 0.3 }
+                                        x: { type: "spring", stiffness: 200, damping: 30, mass: 0.5 },
+                                        opacity: { duration: 0.3 },
+                                        scale: { duration: 0.3 }
                                     }}
                                     drag="x"
                                     dragConstraints={{ left: 0, right: 0 }}

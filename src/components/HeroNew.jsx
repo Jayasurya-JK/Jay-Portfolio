@@ -124,30 +124,39 @@ const HeroNew = () => {
 
         const particlesInstance = particlesContainerRef.current;
 
+        // Cache canvas element to avoid repeated DOM queries
+        let canvas = null;
+        const getCanvas = () => {
+            if (!canvas) {
+                canvas = document.querySelector('#hero-particles canvas');
+            }
+            return canvas;
+        };
+
         // Initial burst animation - trigger multiple grab effects
         const triggerInitialBurst = async () => {
             await new Promise(resolve => setTimeout(resolve, 500)); // Wait for particles to load
+            
+            canvas = getCanvas(); // Cache the canvas reference
+            if (!canvas) return; // Guard against canvas not being ready
             
             // Simulate 2-3 touch/click events to show connections
             const burstCount = isMobile ? 3 : 2;
             for (let i = 0; i < burstCount; i++) {
                 setTimeout(() => {
-                    if (particlesInstance) {
+                    if (particlesInstance && canvas) {
                         // Get random position within canvas
-                        const canvas = document.querySelector('#hero-particles canvas');
-                        if (canvas) {
-                            const rect = canvas.getBoundingClientRect();
-                            const x = rect.width * (0.3 + Math.random() * 0.4);
-                            const y = rect.height * (0.3 + Math.random() * 0.4);
-                            
-                            // Create synthetic event for particles
-                            const event = new MouseEvent('click', {
-                                clientX: rect.left + x,
-                                clientY: rect.top + y,
-                                bubbles: true
-                            });
-                            canvas.dispatchEvent(event);
-                        }
+                        const rect = canvas.getBoundingClientRect();
+                        const x = rect.width * (0.3 + Math.random() * 0.4);
+                        const y = rect.height * (0.3 + Math.random() * 0.4);
+                        
+                        // Create synthetic event for particles
+                        const event = new MouseEvent('click', {
+                            clientX: rect.left + x,
+                            clientY: rect.top + y,
+                            bubbles: true
+                        });
+                        canvas.dispatchEvent(event);
                     }
                 }, i * 800); // Stagger the bursts
             }
@@ -158,7 +167,7 @@ const HeroNew = () => {
         // Periodic auto-connections (every 4 seconds on mobile, 5 seconds on desktop)
         const interval = setInterval(() => {
             if (particlesInstance) {
-                const canvas = document.querySelector('#hero-particles canvas');
+                canvas = getCanvas(); // Ensure we have the canvas reference
                 if (canvas) {
                     const rect = canvas.getBoundingClientRect();
                     const x = rect.width * (0.2 + Math.random() * 0.6);

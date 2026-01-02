@@ -59,7 +59,7 @@ const Process = () => {
         if (isAutoPlaying) {
             interval = setInterval(() => {
                 setActiveIndex((prev) => prev + 1);
-            }, 4000);
+            }, 3000);
         }
         return () => clearInterval(interval);
     }, [isAutoPlaying]);
@@ -107,7 +107,7 @@ const Process = () => {
                             initial={{ opacity: 0, y: 20, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                            transition={{ 
+                            transition={{
                                 duration: 0.3,
                                 ease: [0.43, 0.13, 0.23, 0.96]
                             }}
@@ -138,7 +138,7 @@ const Process = () => {
                     <motion.div
                         className="absolute top-10 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] md:w-[600px] md:h-[600px] rounded-full flex items-center justify-center pointer-events-none"
                         animate={{ rotate: -90 - (activeIndex * spacing) }}
-                        transition={reduceMotion ? { duration: 0.3 } : { 
+                        transition={reduceMotion ? { duration: 0.3 } : {
                             type: "tween",
                             duration: 0.3,
                             ease: [0.25, 0.1, 0.25, 1]
@@ -185,7 +185,7 @@ const Process = () => {
                                             //             = -90 + (effectiveIndex - activeIndex) * spacing
                                             // So we rotate by NEGATIVE of that.
                                             animate={{ rotate: -(-90 + (effectiveIndex - activeIndex) * spacing) }}
-                                            transition={reduceMotion ? { duration: 0.3 } : { 
+                                            transition={reduceMotion ? { duration: 0.3 } : {
                                                 type: "tween",
                                                 duration: 0.3,
                                                 ease: [0.25, 0.1, 0.25, 1]

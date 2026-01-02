@@ -6,7 +6,7 @@ import { shouldReduceMotion } from '../utils/deviceDetection';
 
 const USP = () => {
     const reduceMotion = shouldReduceMotion();
-    
+
     const usps = [
         {
             icon: <Wallet size={24} className="text-accent" />,

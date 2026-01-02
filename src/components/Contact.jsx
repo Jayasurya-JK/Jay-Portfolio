@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MessageCircle, Send } from 'lucide-react';
+import { MessageCircle, Send, ChevronDown } from 'lucide-react';
 import Reveal from './Reveal';
 
 const Contact = () => {
@@ -12,8 +12,23 @@ const Contact = () => {
         message: ''
     });
 
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const projectOptions = [
+        "Website (Design + Dev)",
+        "SEO & Performance",
+        "E-commerce Store",
+        "Custom Application",
+        "Other"
+    ];
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleOptionSelect = (option) => {
+        setFormData({ ...formData, projectType: option });
+        setIsDropdownOpen(false);
     };
 
     const handleSubmit = (e) => {
@@ -30,8 +45,6 @@ const Contact = () => {
             .then(() => alert("Thanks for reaching out! I will get back to you shortly."))
             .catch((error) => alert(error));
     };
-
-
 
     return (
         <section id="contact" className="py-12 md:py-20 bg-secondary/30">
@@ -107,18 +120,31 @@ const Contact = () => {
 
                         <div>
                             <label htmlFor="projectType" className="block text-sm font-medium text-gray-300 mb-2">Type of Project</label>
-                            <select
-                                id="projectType"
-                                name="projectType"
-                                value={formData.projectType}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 bg-primary border border-white/10 rounded-lg text-white focus:outline-none focus:border-accent transition-colors"
-                            >
-                                <option value="Website">Website</option>
-                                <option value="Product catalog">Product catalog</option>
-                                <option value="Both">Both</option>
-                                <option value="Other">Other</option>
-                            </select>
+                            <div className="relative">
+                                <input type="hidden" name="projectType" value={formData.projectType} />
+                                <button
+                                    type="button"
+                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    className="w-full px-4 py-3 bg-primary border border-white/10 rounded-lg text-white text-left flex justify-between items-center focus:outline-none focus:border-accent transition-colors"
+                                >
+                                    <span>{formData.projectType || "Select a project type"}</span>
+                                    <ChevronDown className={`text-gray-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} size={20} />
+                                </button>
+
+                                {isDropdownOpen && (
+                                    <div className="absolute top-full left-0 right-0 mt-2 bg-primary border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden">
+                                        {projectOptions.map((option) => (
+                                            <div
+                                                key={option}
+                                                onClick={() => handleOptionSelect(option)}
+                                                className="px-4 py-3 text-gray-300 hover:bg-white/5 hover:text-white cursor-pointer transition-colors"
+                                            >
+                                                {option}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <div>

@@ -32,7 +32,7 @@ const ProjectShowcase = ({ project, index }) => {
 
     // Calculate mobile values from scroll progress
     const mobileScale = isMobile ? 0.8 + (mobileScrollProgress * 0.2) : 1;
-    const mobileOpacity = isMobile ? 0.5 + (mobileScrollProgress * 0.5) : 1;
+    const mobileOpacity = 1;
 
     // Final values: desktop uses Framer Motion, mobile uses optimized hook
     const scale = reduceMotion ? 1 : (isMobile ? mobileScale : scaleTransform);
@@ -107,9 +107,9 @@ const ProjectShowcase = ({ project, index }) => {
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >
             {/* Ambient Background Glow - Static on mobile for performance */}
-            <div 
-                className={`absolute inset-0 bg-gradient-to-br ${project.color} ${isMobile ? 'opacity-5' : 'opacity-10'} blur-3xl pointer-events-none`} 
-                style={{ 
+            <div
+                className={`absolute inset-0 bg-gradient-to-br ${project.color} ${isMobile ? 'opacity-5' : 'opacity-10'} blur-3xl pointer-events-none`}
+                style={{
                     transform: 'translateZ(0)',
                     willChange: isMobile ? 'auto' : 'opacity'
                 }}
@@ -124,7 +124,7 @@ const ProjectShowcase = ({ project, index }) => {
                     className="flex-1 relative group z-20"
                 >
                     {/* Floating Index Number */}
-                    <div className="absolute -top-20 left-0 md:top-8 md:left-8 lg:top-12 lg:left-12 text-[60px] md:text-[120px] lg:text-[200px] font-black text-white/20 select-none pointer-events-none z-10">
+                    <div className="absolute -top-20 left-0 md:static md:-mb-4 md:ml-[-1rem] lg:mb-0 text-[60px] md:text-[120px] lg:text-[200px] md:leading-[0.8] font-black text-white/20 select-none pointer-events-none z-10">
                         {String(index + 1).padStart(2, '0')}
                     </div>
 
@@ -140,8 +140,8 @@ const ProjectShowcase = ({ project, index }) => {
                                 <motion.div
                                     initial={isMobile ? {} : { rotateY: -15, rotateX: 5 }}
                                     whileHover={isMobile ? {} : { rotateY: 0, rotateX: 0, scale: 1.02 }}
-                                    transition={{ 
-                                        duration: 0.5, 
+                                    transition={{
+                                        duration: 0.5,
                                         ease: [0.43, 0.13, 0.23, 0.96]
                                     }}
                                     className="relative perspective-1000"
@@ -176,7 +176,7 @@ const ProjectShowcase = ({ project, index }) => {
                                 <motion.div
                                     initial={isMobile ? {} : { y: 20 }}
                                     animate={isMobile ? {} : { y: isHovered ? 0 : 20 }}
-                                    transition={{ 
+                                    transition={{
                                         duration: 0.5,
                                         ease: [0.43, 0.13, 0.23, 0.96]
                                     }}
@@ -255,26 +255,24 @@ const ProjectShowcase = ({ project, index }) => {
 
 
                     {/* CTA Buttons - Mobile optimized */}
-                    <div className="reveal-item flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-4">
+                    <div className="reveal-item flex flex-row flex-wrap gap-3 sm:gap-4 pt-4">
                         <Link
                             to={`/project/${project.id}`}
-                            className="group/btn relative inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-gradient-to-r from-accent to-accent/80 text-primary font-bold text-sm sm:text-base rounded-2xl overflow-hidden shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40 transition-all w-full sm:w-auto"
+                            className="group/btn relative inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-gradient-to-r from-accent to-accent/80 text-primary font-bold text-xs sm:text-base rounded-2xl overflow-hidden shadow-lg shadow-accent/20 hover:shadow-2xl hover:shadow-accent/40 transition-all flex-1 sm:flex-initial w-auto"
                         >
-                            <span className="relative z-10">View Case Study</span>
-                            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform relative z-10" />
+                            <span className="relative z-10 whitespace-nowrap">View Case Study</span>
+                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover/btn:translate-x-1 transition-transform relative z-10" />
                             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity"></div>
                         </Link>
-                        {project.link !== '#' && (
-                            <a
-                                href={project.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group/btn inline-flex items-center justify-center gap-3 px-6 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 rounded-2xl text-white font-semibold text-sm sm:text-base transition-all w-full sm:w-auto"
-                            >
-                                <span>Live Site</span>
-                                <ExternalLink className="w-5 h-5 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform" />
-                            </a>
-                        )}
+                        <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/btn inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-8 py-3 sm:py-4 min-h-[48px] bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/40 rounded-2xl text-white font-semibold text-xs sm:text-base transition-all flex-1 sm:flex-initial w-auto"
+                        >
+                            <span className="whitespace-nowrap">Live Site</span>
+                            <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform" />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -319,7 +317,7 @@ const FeaturedWorkNew = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ 
+                    transition={{
                         duration: 0.5,
                         ease: [0.43, 0.13, 0.23, 0.96]
                     }}

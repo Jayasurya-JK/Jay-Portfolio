@@ -90,17 +90,35 @@ const HeroNew = () => {
     const isMobile = useMemo(() => isMobileDevice(), []);
     const isTouch = isTouchDevice();
 
-    // Custom cursor effect - Desktop only
+    // Custom cursor effect - Desktop only & Hero only
     useEffect(() => {
         if (isMobile || isTouch) return;
 
         const moveCursor = (e) => {
-            if (cursorRef.current) {
+            // Check if mouse is over the hero section
+            let isOverHero = false;
+            if (heroRef.current) {
+                const rect = heroRef.current.getBoundingClientRect();
+                isOverHero = (
+                    e.clientX >= rect.left &&
+                    e.clientX <= rect.right &&
+                    e.clientY >= rect.top &&
+                    e.clientY <= rect.bottom
+                );
+            }
+
+            if (cursorRef.current && isOverHero) {
                 gsap.to(cursorRef.current, {
                     x: e.clientX,
                     y: e.clientY,
-                    duration: 0.5,
-                    ease: "power2.out"
+                    duration: 0.1,
+                    ease: "power2.out",
+                    opacity: 1
+                });
+            } else if (cursorRef.current) {
+                gsap.to(cursorRef.current, {
+                    opacity: 0,
+                    duration: 0.3
                 });
             }
         };
@@ -136,10 +154,10 @@ const HeroNew = () => {
         // Initial burst animation - trigger multiple grab effects
         const triggerInitialBurst = async () => {
             await new Promise(resolve => setTimeout(resolve, 500)); // Wait for particles to load
-            
+
             canvas = getCanvas(); // Cache the canvas reference
             if (!canvas) return; // Guard against canvas not being ready
-            
+
             // Simulate 2-3 touch/click events to show connections
             const burstCount = isMobile ? 3 : 2;
             for (let i = 0; i < burstCount; i++) {
@@ -149,7 +167,7 @@ const HeroNew = () => {
                         const rect = canvas.getBoundingClientRect();
                         const x = rect.width * (0.3 + Math.random() * 0.4);
                         const y = rect.height * (0.3 + Math.random() * 0.4);
-                        
+
                         // Create synthetic event for particles
                         const event = new MouseEvent('click', {
                             clientX: rect.left + x,
@@ -172,14 +190,14 @@ const HeroNew = () => {
                     const rect = canvas.getBoundingClientRect();
                     const x = rect.width * (0.2 + Math.random() * 0.6);
                     const y = rect.height * (0.2 + Math.random() * 0.6);
-                    
+
                     const event = new MouseEvent('mousemove', {
                         clientX: rect.left + x,
                         clientY: rect.top + y,
                         bubbles: true
                     });
                     canvas.dispatchEvent(event);
-                    
+
                     // Clear the hover effect after a moment
                     setTimeout(() => {
                         const clearEvent = new MouseEvent('mouseout', { bubbles: true });
@@ -293,7 +311,7 @@ const HeroNew = () => {
             {/* Custom Cursor - Desktop Only */}
             <div
                 ref={cursorRef}
-                className="hidden lg:block fixed w-8 h-8 rounded-full border-2 border-accent/50 pointer-events-none z-50 mix-blend-difference"
+                className="hidden lg:block fixed w-8 h-8 rounded-full border-2 border-accent/50 pointer-events-none z-50 mix-blend-difference opacity-0 transition-opacity duration-300"
                 style={{ transform: 'translate(-50%, -50%)' }}
             />
 
@@ -321,7 +339,7 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ 
+                        transition={{
                             duration: 0.5,
                             ease: [0.43, 0.13, 0.23, 0.96]
                         }}
@@ -337,8 +355,8 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ 
-                            duration: 0.6, 
+                        transition={{
+                            duration: 0.6,
                             delay: 0.2,
                             ease: [0.43, 0.13, 0.23, 0.96]
                         }}
@@ -364,8 +382,8 @@ const HeroNew = () => {
                     <motion.p
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ 
-                            duration: 0.6, 
+                        transition={{
+                            duration: 0.6,
                             delay: 0.4,
                             ease: [0.43, 0.13, 0.23, 0.96]
                         }}
@@ -381,8 +399,8 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ 
-                            duration: 0.6, 
+                        transition={{
+                            duration: 0.6,
                             delay: 0.6,
                             ease: [0.43, 0.13, 0.23, 0.96]
                         }}
@@ -406,8 +424,8 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ 
-                            duration: 0.6, 
+                        transition={{
+                            duration: 0.6,
                             delay: 0.8,
                             ease: [0.43, 0.13, 0.23, 0.96]
                         }}
@@ -440,8 +458,8 @@ const HeroNew = () => {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ 
-                            duration: 0.8, 
+                        transition={{
+                            duration: 0.8,
                             delay: 1,
                             ease: [0.43, 0.13, 0.23, 0.96]
                         }}

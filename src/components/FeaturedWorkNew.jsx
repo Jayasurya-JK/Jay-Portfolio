@@ -81,7 +81,7 @@ const ProjectShowcase = ({ project, index }) => {
                 scale: reduceMotion || isMobile ? 1 : scale,
                 opacity: reduceMotion || isMobile ? 1 : opacity
             }}
-            className="relative min-h-auto md:sticky md:top-0 md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8"
+            className="relative md:sticky md:top-0 md:h-screen flex items-center justify-center py-6 md:py-20 px-4 sm:px-6 md:px-8"
             onMouseEnter={() => !isMobile && setIsHovered(true)}
             onMouseLeave={() => !isMobile && setIsHovered(false)}
         >

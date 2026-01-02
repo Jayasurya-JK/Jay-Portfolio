@@ -84,11 +84,6 @@
     transform: translateZ(0);
   }
   
-  /* Reduce paint/composite cost on mobile */
-  .motion-div {
-    will-change: auto;
-  }
-  
   /* Optimize transforms for mobile */
   .perspective-1000 {
     perspective: none;

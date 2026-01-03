@@ -1,22 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Monitor, Smartphone, ChevronLeft, ChevronRight, ExternalLink, Target, Zap, TrendingUp } from 'lucide-react';
 import { projects } from '../data/projects';
-import Reveal from './Reveal';
 
 const ProjectDetails = () => {
     const { id } = useParams();
     const project = projects.find(p => p.id === id);
     const [viewMode, setViewMode] = useState('desktop'); // 'desktop' or 'mobile'
+    const screenshots = (viewMode === 'desktop' ? project.details?.desktopScreenshots : project.details?.mobileScreenshots) || [];
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [activeTab, setActiveTab] = useState('challenge');
+    const [isHovering, setIsHovering] = useState(false);
+    const [isGalleryHovering, setIsGalleryHovering] = useState(false);
+
+    // Auto-rotate tabs
+    useEffect(() => {
+        if (isHovering) return;
+        const interval = setInterval(() => {
+            setActiveTab(current => {
+                if (current === 'challenge') return 'solution';
+                if (current === 'solution') return 'impact';
+                return 'challenge';
+            });
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [isHovering]);
+
+    // Auto-rotate screenshots
+    useEffect(() => {
+        if (isGalleryHovering) return;
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % screenshots.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [isGalleryHovering, screenshots.length]);
 
     if (!project) {
         return <div className="min-h-screen flex items-center justify-center text-white">Project not found</div>;
     }
 
-    const screenshots = (viewMode === 'desktop' ? project.details?.desktopScreenshots : project.details?.mobileScreenshots) || [];
+
 
     const nextImage = () => {
         setCurrentImageIndex((prev) => (prev + 1) % screenshots.length);
@@ -27,11 +51,11 @@ const ProjectDetails = () => {
     };
 
     return (
-        <div className="min-h-screen bg-primary pt-4 md:pt-24 pb-12 md:pb-20 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
+        <div className="min-h-screen bg-primary pt-2 md:pt-16 pb-8 md:pb-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden">
             <div className="max-w-7xl mx-auto w-full">
                 {/* Header */}
-                <div className="mb-6 md:mb-8">
-                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-4 md:mb-6 min-h-[44px]">
+                <div className="mb-4 md:mb-6">
+                    <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors mb-2 md:mb-4 min-h-[44px]">
                         <ArrowLeft size={20} /> Back to Home
                     </Link>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
@@ -51,9 +75,9 @@ const ProjectDetails = () => {
                 </div>
 
                 {/* View Toggle & Gallery */}
-                <div className="bg-secondary/30 rounded-2xl md:rounded-3xl border border-white/5 overflow-hidden mb-8 md:mb-12">
+                <div className="bg-secondary/30 rounded-2xl md:rounded-3xl border border-white/5 overflow-hidden mb-6 md:mb-10">
                     {/* Toolbar */}
-                    <div className="p-4 md:p-6 border-b border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="p-3 md:p-5 border-b border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
                         <h3 className="text-base md:text-lg font-medium text-white">Project Gallery</h3>
 
                         {/* Toggle Switch */}
@@ -84,7 +108,11 @@ const ProjectDetails = () => {
                     </div>
 
                     {/* Image Display */}
-                    <div className="relative bg-black/50 p-4 md:p-8 lg:p-12 flex items-center justify-center min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
+                    <div
+                        className="relative bg-black/50 p-2 md:p-6 lg:p-8 flex items-center justify-center min-h-[300px] md:min-h-[500px] lg:min-h-[600px]"
+                        onMouseEnter={() => setIsGalleryHovering(true)}
+                        onMouseLeave={() => setIsGalleryHovering(false)}
+                    >
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={viewMode + currentImageIndex}
@@ -92,20 +120,31 @@ const ProjectDetails = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 1.05 }}
                                 transition={{ duration: 0.3 }}
-                                className={`relative ${viewMode === 'mobile' ? 'max-w-[280px] sm:max-w-[320px] md:max-w-[360px]' : 'w-full max-w-5xl'}`}
+                                drag={viewMode === 'mobile' ? "x" : false}
+                                dragConstraints={{ left: 0, right: 0 }}
+                                dragElastic={0.2}
+                                onDragEnd={(e, { offset, velocity }) => {
+                                    const swipe = Math.abs(offset.x) * velocity.x;
+                                    if (offset.x > 50 || swipe > 500) {
+                                        prevImage();
+                                    } else if (offset.x < -50 || swipe < -500) {
+                                        nextImage();
+                                    }
+                                }}
+                                className={`relative ${viewMode === 'mobile' ? 'max-w-[280px] sm:max-w-[320px] md:max-w-[360px] cursor-grab active:cursor-grabbing' : 'w-full max-w-7xl'}`}
                             >
                                 {screenshots.length > 0 ? (
                                     viewMode === 'desktop' ? (
                                         // Desktop Browser Frame
-                                        <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                                        <div className="rounded-xl md:rounded-2xl overflow-hidden shadow-2xl border border-white/10 w-full">
                                             {/* Browser Chrome */}
-                                            <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-3 border-b border-gray-700 flex items-center gap-4">
-                                                <div className="flex gap-2">
-                                                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                                                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                            <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-2 md:p-3 border-b border-gray-700 flex items-center gap-2 md:gap-4">
+                                                <div className="flex gap-1.5 md:gap-2">
+                                                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500"></div>
+                                                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-yellow-500"></div>
+                                                    <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500"></div>
                                                 </div>
-                                                <div className="flex-1 bg-[#1a1a1a] rounded-full px-4 py-1.5 text-xs text-gray-500 font-mono text-center truncate">
+                                                <div className="flex-1 bg-[#1a1a1a] rounded-full px-3 py-1 md:px-4 md:py-1.5 text-[10px] md:text-xs text-gray-500 font-mono text-center truncate">
                                                     {project.domain || "project-demo.com"}
                                                 </div>
                                             </div>
@@ -119,14 +158,37 @@ const ProjectDetails = () => {
                                             </div>
                                         </div>
                                     ) : (
-                                        // Mobile Phone Frame
-                                        <div className="bg-gray-900 rounded-[2.5rem] p-3 shadow-2xl border-[6px] border-gray-800 mx-auto">
-                                            <div className="bg-black rounded-[2rem] overflow-hidden relative border border-gray-800">
-                                                <img
-                                                    src={screenshots[currentImageIndex]}
-                                                    alt={`Mobile Screenshot ${currentImageIndex + 1}`}
-                                                    className="w-full h-auto block"
-                                                />
+                                        // Mobile Phone Frame - Sleeker Design
+                                        <div className="relative mx-auto border-gray-800 bg-gray-800 border-[8px] md:border-[12px] rounded-[2rem] md:rounded-[2.5rem] h-[450px] w-[225px] sm:h-[520px] sm:w-[260px] md:h-[600px] md:w-[300px] shadow-xl flex-shrink-0">
+                                            {/* Notch / Dynamic Island */}
+                                            <div className="w-[80px] md:w-[100px] h-[18px] md:h-[24px] bg-gray-800 top-0 rounded-b-[1rem] left-1/2 -translate-x-1/2 absolute z-20"></div>
+
+                                            {/* Side Buttons */}
+                                            <div className="h-[28px] md:h-[36px] w-[2px] md:w-[3px] bg-gray-800 absolute -start-[8px] md:-start-[12px] top-[80px] md:top-[124px] rounded-s-lg"></div>
+                                            <div className="h-[28px] md:h-[36px] w-[2px] md:w-[3px] bg-gray-800 absolute -start-[8px] md:-start-[12px] top-[115px] md:top-[168px] rounded-s-lg"></div>
+                                            <div className="h-[40px] md:h-[52px] w-[2px] md:w-[3px] bg-gray-800 absolute -end-[8px] md:-end-[12px] top-[100px] md:top-[142px] rounded-e-lg"></div>
+
+                                            {/* Inner Screen */}
+                                            <div className="rounded-[calc(2rem-8px)] md:rounded-[calc(2.5rem-12px)] overflow-hidden w-full h-full bg-black flex flex-col relative z-10">
+                                                {/* Status Bar / Safe Area */}
+                                                <div className="h-[24px] w-full bg-black flex items-center justify-between px-5 md:px-6 z-20 shrink-0">
+                                                    <div className="text-[9px] md:text-[10px] text-white font-medium pl-2">9:41</div>
+                                                    <div className="flex gap-1 pr-2">
+                                                        <div className="w-2.5 h-2.5 bg-white rounded-full opacity-20"></div>
+                                                        <div className="w-2.5 h-2.5 bg-white rounded-full opacity-20"></div>
+                                                        <div className="w-3.5 h-2.5 bg-white rounded-[2px]"></div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex-1 w-full relative bg-white overflow-hidden rounded-b-[calc(2rem-8px)] md:rounded-b-[calc(2.5rem-12px)]">
+                                                    <img
+                                                        src={screenshots[currentImageIndex]}
+                                                        alt={`Mobile Screenshot ${currentImageIndex + 1}`}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+
+                                                {/* Home Indicator */}
+                                                <div className="absolute bottom-1.5 md:bottom-2 left-1/2 -translate-x-1/2 w-20 md:w-28 h-1 bg-white/90 rounded-full backdrop-blur-md z-30 shadow-sm"></div>
                                             </div>
                                         </div>
                                     )
@@ -140,28 +202,28 @@ const ProjectDetails = () => {
                         {screenshots.length > 1 && (
                             <>
                                 <button
-                                    onClick={prevImage}
-                                    className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 p-2 md:p-3 min-w-[44px] min-h-[44px] bg-black/50 hover:bg-accent text-white hover:text-primary rounded-full backdrop-blur-sm transition-all border border-white/10 flex items-center justify-center"
+                                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                                    className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-40"
                                 >
-                                    <ChevronLeft size={20} />
+                                    <ChevronLeft size={20} className="md:w-7 md:h-7" strokeWidth={2} />
                                 </button>
                                 <button
-                                    onClick={nextImage}
-                                    className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 p-2 md:p-3 min-w-[44px] min-h-[44px] bg-black/50 hover:bg-accent text-white hover:text-primary rounded-full backdrop-blur-sm transition-all border border-white/10 flex items-center justify-center"
+                                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                                    className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-all z-40"
                                 >
-                                    <ChevronRight size={20} />
+                                    <ChevronRight size={20} className="md:w-7 md:h-7" strokeWidth={2} />
                                 </button>
                             </>
                         )}
 
                         {/* Dots Indicator */}
                         {screenshots.length > 1 && (
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                            <div className="absolute -bottom-6 md:-bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
                                 {screenshots.map((_, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setCurrentImageIndex(idx)}
-                                        className={`rounded-full transition-all min-w-[24px] min-h-[24px] flex items-center justify-center ${idx === currentImageIndex ? 'bg-accent w-6 h-2' : 'bg-white/30 hover:bg-white/50 w-2 h-2'}`}
+                                        className={`rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'bg-white w-6 md:w-8 h-1.5 md:h-2' : 'bg-white/20 hover:bg-white/40 w-1.5 md:w-2 h-1.5 md:h-2'}`}
                                         aria-label={`Go to screenshot ${idx + 1}`}
                                     />
                                 ))}
@@ -173,134 +235,162 @@ const ProjectDetails = () => {
                 {/* Tech Tags and Details Grid */}
                 <div className="space-y-8 md:space-y-12">
                     {/* Tech Tags */}
-                    <Reveal>
-                        <div className="flex flex-wrap gap-2 justify-center">
-                            {project.tags.map((tag, idx) => (
-                                <span
-                                    key={idx}
-                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl text-sm text-gray-300 font-medium transition-all cursor-default"
-                                >
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                    </Reveal>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                        {project.tags.map((tag, idx) => (
+                            <span
+                                key={idx}
+                                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl text-sm text-gray-300 font-medium transition-all cursor-default"
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
 
                     {/* Interactive Details Tabs */}
                     <div className="max-w-4xl mx-auto">
                         {/* Tab Navigation */}
-                        <div className="flex justify-center gap-8 mb-8">
+                        <div
+                            className="flex justify-between w-full md:w-auto md:justify-center md:gap-16 mb-8 md:mb-12 border-b border-white/5 pb-4 px-2 md:px-0"
+                            onMouseEnter={() => setIsHovering(true)}
+                            onMouseLeave={() => setIsHovering(false)}
+                        >
                             <button
                                 onClick={() => setActiveTab('challenge')}
-                                className={`flex flex-col items-center gap-2 group transition-all ${activeTab === 'challenge' ? 'scale-110' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
+                                className="group relative flex flex-col items-center gap-2 md:gap-3 outline-none flex-1 md:flex-none"
                             >
-                                <div className={`p-4 rounded-full transition-all ${activeTab === 'challenge' ? 'bg-red-500/20 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-gray-400'}`}>
-                                    <Target size={28} />
-                                </div>
-                                <span className={`text-sm font-medium tracking-wide ${activeTab === 'challenge' ? 'text-red-500' : 'text-gray-500'}`}>CHALLENGE</span>
+                                <motion.div
+                                    className={`p-2.5 md:p-3 rounded-2xl transition-colors duration-300 ${activeTab === 'challenge' ? 'text-red-500 bg-red-500/10' : 'text-gray-500 group-hover:text-gray-300'}`}
+                                    animate={activeTab === 'challenge' ? { rotate: [0, -10, 10, 0], scale: 1.1 } : { scale: 1 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                >
+                                    <Target size={24} className="md:w-8 md:h-8" strokeWidth={1.5} />
+                                </motion.div>
+                                <span className={`text-[10px] md:text-sm font-medium tracking-widest transition-colors ${activeTab === 'challenge' ? 'text-white' : 'text-gray-600'}`}>CHALLENGE</span>
+                                {activeTab === 'challenge' && (
+                                    <motion.div
+                                        layoutId="activeTabIndicator"
+                                        className="absolute -bottom-[17px] w-full md:w-[120%] h-[2px] bg-red-500"
+                                    />
+                                )}
                             </button>
 
                             <button
                                 onClick={() => setActiveTab('solution')}
-                                className={`flex flex-col items-center gap-2 group transition-all ${activeTab === 'solution' ? 'scale-110' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
+                                className="group relative flex flex-col items-center gap-2 md:gap-3 outline-none flex-1 md:flex-none"
                             >
-                                <div className={`p-4 rounded-full transition-all ${activeTab === 'solution' ? 'bg-blue-500/20 text-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.3)]' : 'bg-white/5 text-gray-400'}`}>
-                                    <Zap size={28} />
-                                </div>
-                                <span className={`text-sm font-medium tracking-wide ${activeTab === 'solution' ? 'text-blue-500' : 'text-gray-500'}`}>SOLUTION</span>
+                                <motion.div
+                                    className={`p-2.5 md:p-3 rounded-2xl transition-colors duration-300 ${activeTab === 'solution' ? 'text-blue-500 bg-blue-500/10' : 'text-gray-500 group-hover:text-gray-300'}`}
+                                    animate={activeTab === 'solution' ? { y: [0, -4, 0], scale: 1.1 } : { scale: 1 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                >
+                                    <Zap size={24} className="md:w-8 md:h-8" strokeWidth={1.5} />
+                                </motion.div>
+                                <span className={`text-[10px] md:text-sm font-medium tracking-widest transition-colors ${activeTab === 'solution' ? 'text-white' : 'text-gray-600'}`}>SOLUTION</span>
+                                {activeTab === 'solution' && (
+                                    <motion.div
+                                        layoutId="activeTabIndicator"
+                                        className="absolute -bottom-[17px] w-full md:w-[120%] h-[2px] bg-blue-500"
+                                    />
+                                )}
                             </button>
 
                             <button
                                 onClick={() => setActiveTab('impact')}
-                                className={`flex flex-col items-center gap-2 group transition-all ${activeTab === 'impact' ? 'scale-110' : 'opacity-50 hover:opacity-100 hover:scale-105'}`}
+                                className="group relative flex flex-col items-center gap-2 md:gap-3 outline-none flex-1 md:flex-none"
                             >
-                                <div className={`p-4 rounded-full transition-all ${activeTab === 'impact' ? 'bg-green-500/20 text-green-500 shadow-[0_0_20px_rgba(34,197,94,0.3)]' : 'bg-white/5 text-gray-400'}`}>
-                                    <TrendingUp size={28} />
-                                </div>
-                                <span className={`text-sm font-medium tracking-wide ${activeTab === 'impact' ? 'text-green-500' : 'text-gray-500'}`}>IMPACT</span>
+                                <motion.div
+                                    className={`p-2.5 md:p-3 rounded-2xl transition-colors duration-300 ${activeTab === 'impact' ? 'text-green-500 bg-green-500/10' : 'text-gray-500 group-hover:text-gray-300'}`}
+                                    animate={activeTab === 'impact' ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                >
+                                    <TrendingUp size={24} className="md:w-8 md:h-8" strokeWidth={1.5} />
+                                </motion.div>
+                                <span className={`text-[10px] md:text-sm font-medium tracking-widest transition-colors ${activeTab === 'impact' ? 'text-white' : 'text-gray-600'}`}>IMPACT</span>
+                                {activeTab === 'impact' && (
+                                    <motion.div
+                                        layoutId="activeTabIndicator"
+                                        className="absolute -bottom-[17px] w-full md:w-[120%] h-[2px] bg-green-500"
+                                    />
+                                )}
                             </button>
                         </div>
 
                         {/* Tab Content */}
-                        <Reveal>
-                            <AnimatePresence mode="wait">
-                                {activeTab === 'challenge' && (
-                                    <motion.div
-                                        key="challenge"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 20 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="bg-red-500/5 p-8 md:p-10 rounded-3xl border border-red-500/20 text-left relative overflow-hidden"
-                                    >
-                                        <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
-                                            <Target size={200} className="text-red-500" />
-                                        </div>
-                                        <Target className="w-12 h-12 text-red-500 mb-6" />
-                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-4 uppercase tracking-wider">The Challenge</h3>
-                                        <p className="text-gray-200 text-lg leading-relaxed relative z-10">
-                                            {project.details?.challenge || "Addressing complex user needs through intuitive design."}
-                                        </p>
-                                    </motion.div>
-                                )}
+                        <AnimatePresence mode="wait">
+                            {activeTab === 'challenge' && (
+                                <motion.div
+                                    key="challenge"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="bg-red-500/5 p-5 md:p-10 rounded-3xl border border-red-500/20 text-left relative overflow-hidden"
+                                >
+                                    <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                                        <Target size={120} className="text-red-500 md:w-[200px] md:h-[200px]" />
+                                    </div>
+                                    <Target className="w-8 h-8 md:w-12 md:h-12 text-red-500 mb-4 md:mb-6" />
+                                    <h3 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 uppercase tracking-wider">The Challenge</h3>
+                                    <p className="text-sm md:text-lg text-gray-200 leading-relaxed relative z-10">
+                                        {project.details?.challenge || "Addressing complex user needs through intuitive design."}
+                                    </p>
+                                </motion.div>
+                            )}
 
-                                {activeTab === 'solution' && (
-                                    <motion.div
-                                        key="solution"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 20 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="bg-blue-500/5 p-8 md:p-10 rounded-3xl border border-blue-500/20 text-left relative overflow-hidden"
-                                    >
-                                        <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
-                                            <Zap size={200} className="text-blue-500" />
-                                        </div>
-                                        <Zap className="w-12 h-12 text-blue-500 mb-6" />
-                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-4 uppercase tracking-wider">The Solution</h3>
-                                        <p className="text-gray-200 text-lg leading-relaxed relative z-10">
-                                            {project.details?.solution || "Implementing robust, scalable technologies."}
-                                        </p>
-                                    </motion.div>
-                                )}
+                            {activeTab === 'solution' && (
+                                <motion.div
+                                    key="solution"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="bg-blue-500/5 p-5 md:p-10 rounded-3xl border border-blue-500/20 text-left relative overflow-hidden"
+                                >
+                                    <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                                        <Zap size={120} className="text-blue-500 md:w-[200px] md:h-[200px]" />
+                                    </div>
+                                    <Zap className="w-8 h-8 md:w-12 md:h-12 text-blue-500 mb-4 md:mb-6" />
+                                    <h3 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 uppercase tracking-wider">The Solution</h3>
+                                    <p className="text-sm md:text-lg text-gray-200 leading-relaxed relative z-10">
+                                        {project.details?.solution || "Implementing robust, scalable technologies."}
+                                    </p>
+                                </motion.div>
+                            )}
 
-                                {activeTab === 'impact' && (
-                                    <motion.div
-                                        key="impact"
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 20 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="bg-green-500/5 p-8 md:p-10 rounded-3xl border border-green-500/20 text-left relative overflow-hidden"
-                                    >
-                                        <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
-                                            <TrendingUp size={200} className="text-green-500" />
-                                        </div>
-                                        <TrendingUp className="w-12 h-12 text-green-500 mb-6" />
-                                        <h3 className="text-xl md:text-2xl font-bold text-white mb-4 uppercase tracking-wider">The Impact</h3>
-                                        <p className="text-gray-200 text-lg leading-relaxed relative z-10">
-                                            {project.details?.impact || "Optimizing performance and driving conversion."}
-                                        </p>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </Reveal>
+                            {activeTab === 'impact' && (
+                                <motion.div
+                                    key="impact"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="bg-green-500/5 p-5 md:p-10 rounded-3xl border border-green-500/20 text-left relative overflow-hidden"
+                                >
+                                    <div className="absolute -bottom-10 -right-10 opacity-5 pointer-events-none">
+                                        <TrendingUp size={120} className="text-green-500 md:w-[200px] md:h-[200px]" />
+                                    </div>
+                                    <TrendingUp className="w-8 h-8 md:w-12 md:h-12 text-green-500 mb-4 md:mb-6" />
+                                    <h3 className="text-lg md:text-2xl font-bold text-white mb-3 md:mb-4 uppercase tracking-wider">The Impact</h3>
+                                    <p className="text-sm md:text-lg text-gray-200 leading-relaxed relative z-10">
+                                        {project.details?.impact || "Optimizing performance and driving conversion."}
+                                    </p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </div>
 
                     {/* Key Features List */}
-                    <Reveal delay={0.4}>
-                        <div className="bg-secondary/20 p-6 md:p-8 rounded-2xl border border-white/5">
-                            <h3 className="text-xl md:text-2xl font-bold text-white mb-6">Key Features</h3>
-                            <div className="grid sm:grid-cols-2 gap-6">
-                                {project.details?.features?.map((feature, idx) => (
-                                    <div key={idx} className="flex flex-col gap-2">
-                                        <h4 className="text-accent font-medium text-lg">{feature.title}</h4>
-                                        <p className="text-sm text-gray-400 leading-relaxed">{feature.desc}</p>
-                                    </div>
-                                ))}
-                            </div>
+                    <div className="bg-secondary/20 p-6 md:p-8 rounded-2xl border border-white/5">
+                        <h3 className="text-xl md:text-2xl font-bold text-white mb-6">Key Features</h3>
+                        <div className="grid sm:grid-cols-2 gap-6">
+                            {project.details?.features?.map((feature, idx) => (
+                                <div key={idx} className="flex flex-col gap-2">
+                                    <h4 className="text-accent font-medium text-lg">{feature.title}</h4>
+                                    <p className="text-sm text-gray-400 leading-relaxed">{feature.desc}</p>
+                                </div>
+                            ))}
                         </div>
-                    </Reveal>
+                    </div>
                 </div>
             </div>
         </div>

@@ -5,6 +5,8 @@ import ProjectDetails from './components/ProjectDetails';
 import SmoothScroll from './components/SmoothScroll';
 import { useEffect } from 'react';
 
+import JsonLd from './components/SEO/JsonLd';
+
 // Scroll to top on route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -17,6 +19,7 @@ const ScrollToTop = () => {
 function App() {
   return (
     <Router>
+      <JsonLd />
       <SmoothScroll />
       <ScrollToTop />
       <Routes>

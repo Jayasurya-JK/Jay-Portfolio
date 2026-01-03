@@ -67,7 +67,7 @@ const ProjectDetails = () => {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] bg-accent text-primary font-bold rounded-xl hover:bg-accent/90 transition-all self-start md:self-auto flex-shrink-0"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 md:px-6 md:py-3 min-h-[44px] md:min-h-[52px] text-sm md:text-base bg-accent text-primary font-bold rounded-xl hover:bg-accent/90 transition-all self-start md:self-auto flex-shrink-0 shadow-lg shadow-accent/20"
                         >
                             <span className="whitespace-nowrap">Visit Live Site</span> <ExternalLink size={18} />
                         </a>
@@ -109,7 +109,7 @@ const ProjectDetails = () => {
 
                     {/* Image Display */}
                     <div
-                        className="relative bg-black/50 p-2 md:p-6 lg:p-8 flex items-center justify-center min-h-[300px] md:min-h-[500px] lg:min-h-[600px]"
+                        className="relative bg-black/50 p-2 md:p-5 lg:p-6 flex items-center justify-center min-h-[300px] md:min-h-[350px] lg:min-h-[400px]"
                         onMouseEnter={() => setIsGalleryHovering(true)}
                         onMouseLeave={() => setIsGalleryHovering(false)}
                     >
@@ -131,7 +131,7 @@ const ProjectDetails = () => {
                                         nextImage();
                                     }
                                 }}
-                                className={`relative ${viewMode === 'mobile' ? 'max-w-[280px] sm:max-w-[320px] md:max-w-[360px] cursor-grab active:cursor-grabbing' : 'w-full max-w-7xl'}`}
+                                className={`relative ${viewMode === 'mobile' ? 'max-w-[280px] sm:max-w-[320px] md:max-w-[360px] cursor-grab active:cursor-grabbing' : 'w-full max-w-3xl'}`}
                             >
                                 {screenshots.length > 0 ? (
                                     viewMode === 'desktop' ? (
@@ -233,13 +233,13 @@ const ProjectDetails = () => {
                 </div>
 
                 {/* Tech Tags and Details Grid */}
-                <div className="space-y-8 md:space-y-12">
+                <div className="space-y-6 md:space-y-10">
                     {/* Tech Tags */}
                     <div className="flex flex-wrap gap-2 justify-center">
                         {project.tags.map((tag, idx) => (
                             <span
                                 key={idx}
-                                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl text-sm text-gray-300 font-medium transition-all cursor-default"
+                                className="px-3 py-1.5 md:px-4 md:py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-accent/30 rounded-xl text-xs md:text-sm text-gray-300 font-medium transition-all cursor-default"
                             >
                                 {tag}
                             </span>

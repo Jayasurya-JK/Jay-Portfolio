@@ -5,7 +5,7 @@ export const projects = [
         subtitle: "Business Website & Calculator",
         role: "Full Stack Developer & UI/UX Designer",
         description: "A high-performance business website featuring a custom Interactive Solar Calculator that estimates savings and ROI. Includes a seamless booking system and simplified explanation of the PM Surya Ghar scheme.",
-        tags: ["Next.js", "Tailwind CSS", "Chart.js", "Web3Forms"],
+        tags: ["Next.js", "Tailwind CSS"],
         link: "https://suryassolar.com",
         linkText: "View live site",
         domain: "suryassolar.com",
